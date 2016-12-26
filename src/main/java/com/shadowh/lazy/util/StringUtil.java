@@ -4,8 +4,6 @@ import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang.StringUtils;
-
 public class StringUtil {
 	/**
 	 * 产生随机字符串

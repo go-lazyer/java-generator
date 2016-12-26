@@ -2,8 +2,8 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.shadowh</groupId>
-	<artifactId>lazy</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<artifactId>shadowh-lazy</artifactId>
+	<version>0.0.1</version>
 	<packaging>jar</packaging>
 
 	<name>lazy</name>

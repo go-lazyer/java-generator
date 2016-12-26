@@ -30,7 +30,6 @@ public  class GencodeConfig {
 		try {
 			gencode.gencode(dbEntity,genCodeEntity);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
