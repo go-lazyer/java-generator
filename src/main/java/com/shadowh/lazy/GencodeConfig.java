@@ -1,10 +1,5 @@
 package com.shadowh.lazy;
 
-import java.io.InputStream;
-import java.net.URL;
-
-import org.apache.commons.io.IOUtils;
-
 import com.shadowh.lazy.entity.DatabaseEntity;
 import com.shadowh.lazy.entity.GenCodeEntity;
 
@@ -22,8 +17,15 @@ public  class GencodeConfig {
 		genCodeEntity.setTableName("tb_admin");
 		genCodeEntity.setModuleName("admin");
 		genCodeEntity.setModuleNameCn("admin");
-		genCodeEntity.setEntityPath("com.hanchanghong.entity");
 		
+		genCodeEntity.setEntityFilePackage("com.shadow.entity");
+		genCodeEntity.setEntityFilePath("src/main/java");
+		
+		genCodeEntity.setMapperFilePackage("com.shadow.mapper");
+		genCodeEntity.setMapperFilePath("src/main/java");
+		
+		genCodeEntity.setMapperXmlFilePackage("mapper");
+		genCodeEntity.setMapperXmlFilePath("src/main/resources");
 		Gencode gencode = new Gencode();
 		try {
 			gencode.gencode(dbEntity,genCodeEntity);

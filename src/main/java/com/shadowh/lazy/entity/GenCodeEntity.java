@@ -5,11 +5,19 @@ public class GenCodeEntity {
 	private String moduleName;
 	private String moduleNameCapi;//首字母大写的模块名
 	private String moduleNameCn;
-	private String entityPath;
-	private String servicePath;
-	private String serviceImplPath;
-	private String mapperPath;
-	private String mapperImplPath;
+	private String entityFilePath;
+	private String entityFilePackage;
+	
+	private String serviceFilePath;
+	private String serviceFilePackage;
+	private String serviceImplFilePath;
+	private String serviceImplFilePackage;
+	
+	private String mapperFilePath;
+	private String mapperFilePackage;
+	
+	private String mapperXmlFilePath;
+	private String mapperXmlFilePackage;
 	
 	private String author;//作者
 	private String updateTime;
@@ -37,35 +45,36 @@ public class GenCodeEntity {
 	public void setModuleNameCn(String moduleNameCn) {
 		this.moduleNameCn = moduleNameCn;
 	}
-	public String getEntityPath() {
-		return entityPath;
+
+	public String getEntityFilePath() {
+		return entityFilePath;
 	}
-	public void setEntityPath(String entityPath) {
-		this.entityPath = entityPath;
+	public void setEntityFilePath(String entityFilePath) {
+		this.entityFilePath = entityFilePath;
 	}
-	public String getServicePath() {
-		return servicePath;
+	public String getServiceFilePath() {
+		return serviceFilePath;
 	}
-	public void setServicePath(String servicePath) {
-		this.servicePath = servicePath;
+	public void setServiceFilePath(String serviceFilePath) {
+		this.serviceFilePath = serviceFilePath;
 	}
-	public String getServiceImplPath() {
-		return serviceImplPath;
+	public String getServiceImplFilePath() {
+		return serviceImplFilePath;
 	}
-	public void setServiceImplPath(String serviceImplPath) {
-		this.serviceImplPath = serviceImplPath;
+	public void setServiceImplFilePath(String serviceImplFilePath) {
+		this.serviceImplFilePath = serviceImplFilePath;
 	}
-	public String getMapperPath() {
-		return mapperPath;
+	public String getMapperFilePath() {
+		return mapperFilePath;
 	}
-	public void setMapperPath(String mapperPath) {
-		this.mapperPath = mapperPath;
+	public void setMapperFilePath(String mapperFilePath) {
+		this.mapperFilePath = mapperFilePath;
 	}
-	public String getMapperImplPath() {
-		return mapperImplPath;
+	public String getMapperXmlFilePath() {
+		return mapperXmlFilePath;
 	}
-	public void setMapperImplPath(String mapperImplPath) {
-		this.mapperImplPath = mapperImplPath;
+	public void setMapperXmlFilePath(String mapperXmlFilePath) {
+		this.mapperXmlFilePath = mapperXmlFilePath;
 	}
 	public String getAuthor() {
 		return author;
@@ -79,12 +88,40 @@ public class GenCodeEntity {
 	public void setUpdateTime(String updateTime) {
 		this.updateTime = updateTime;
 	}
+	
+	public String getEntityFilePackage() {
+		return entityFilePackage;
+	}
+	public void setEntityFilePackage(String entityFilePackage) {
+		this.entityFilePackage = entityFilePackage;
+	}
+	public String getServiceFilePackage() {
+		return serviceFilePackage;
+	}
+	public void setServiceFilePackage(String serviceFilePackage) {
+		this.serviceFilePackage = serviceFilePackage;
+	}
+	public String getServiceImplFilePackage() {
+		return serviceImplFilePackage;
+	}
+	public void setServiceImplFilePackage(String serviceImplFilePackage) {
+		this.serviceImplFilePackage = serviceImplFilePackage;
+	}
+	public String getMapperFilePackage() {
+		return mapperFilePackage;
+	}
+	public void setMapperFilePackage(String mapperFilePackage) {
+		this.mapperFilePackage = mapperFilePackage;
+	}
+	public String getMapperXmlFilePackage() {
+		return mapperXmlFilePackage;
+	}
+	public void setMapperXmlFilePackage(String mapperXmlFilePackage) {
+		this.mapperXmlFilePackage = mapperXmlFilePackage;
+	}
 	@Override
 	public String toString() {
-		return "GenCodeEntity [tableName=" + tableName + ", moduleName=" + moduleName + ", moduleNameCapi="
-				+ moduleNameCapi + ", moduleNameCn=" + moduleNameCn + ", entityPath=" + entityPath + ", servicePath="
-				+ servicePath + ", serviceImplPath=" + serviceImplPath + ", mapperPath=" + mapperPath
-				+ ", mapperImplPath=" + mapperImplPath + ", author=" + author + ", updateTime=" + updateTime + "]";
+		return "GenCodeEntity [tableName=" + tableName + ", moduleName=" + moduleName + ", moduleNameCapi=" + moduleNameCapi + ", moduleNameCn=" + moduleNameCn + ", entityFilePath=" + entityFilePath + ", serviceFilePath=" + serviceFilePath + ", serviceImplFilePath=" + serviceImplFilePath + ", mapperFilePath=" + mapperFilePath + ", mapperXmlFilePath=" + mapperXmlFilePath + ", author=" + author + ", updateTime=" + updateTime + "]";
 	}
 	
 }

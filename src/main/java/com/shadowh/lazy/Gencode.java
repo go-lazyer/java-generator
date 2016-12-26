@@ -1,12 +1,15 @@
 package com.shadowh.lazy;
 
+import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.collections.MapUtils;
+import org.apache.commons.io.FileUtils;
 import org.joda.time.DateTime;
 
 import com.fasterxml.jackson.core.JsonParseException;
@@ -67,7 +70,12 @@ public  class Gencode {
 		gencodeEntity.setUpdateTime(DateTime.now().toString("yyyy-MM-dd HH:mm:ss"));
 		gencodeEntity.setModuleNameCapi(StringUtil.firstUpperCase(gencodeEntity.getModuleName()));
 		List<FieldEntity> fieldList = this.queryFieldList(dbEntity, gencodeEntity.getTableName());
-		String templatePath = GencodeConfig.class.getClassLoader().getResource("template").getPath();
+//		String templatePath = GencodeConfig.class.getClassLoader().getResource("template").getPath();
+		URL fileURL = this.getClass().getResource("/template/entity.ftl");   
+		String templatePath=fileURL.getFile();
+		System.out.println("templatePath = "+templatePath);
+		
+//		System.out.println(fileURL.get);
 		FreeMarkerUtil.initFreeMarker(templatePath);  
 		/** 模板引擎所需要的数据Map */  
 		Map<String,Object> viewMap = new HashMap<String, Object>();  
@@ -76,7 +84,8 @@ public  class Gencode {
 		viewMap.put("author",gencodeEntity.getAuthor());
 		viewMap.put("moduleName",gencodeEntity.getModuleName());
 		viewMap.put("moduleNameCapi", gencodeEntity.getModuleNameCapi());
-		viewMap.put("packagePath",gencodeEntity.getEntityPath());
+		viewMap.put("entityPackage",gencodeEntity.getEntityFilePackage());
+		viewMap.put("mapperPackage",gencodeEntity.getMapperFilePackage());
 		viewMap.put("tableName",gencodeEntity.getTableName());
 		
 		StringBuffer saveSql=new StringBuffer("insert into "+ gencodeEntity.getTableName());
@@ -85,13 +94,13 @@ public  class Gencode {
 		}
 		
 		viewMap.put("attrList",fieldList);  
-		FreeMarkerUtil.crateFile(viewMap, "Mapper.xml", "G:/workspace_e/admin/src/main/webapp/down/"+gencodeEntity.getModuleNameCapi()+"Mapper.xml");  
-		FreeMarkerUtil.crateFile(viewMap, "Mapper.java", "G:/workspace_e/admin/src/main/webapp/down/"+gencodeEntity.getModuleNameCapi()+"Mapper.java");  
+		FreeMarkerUtil.crateFile(viewMap, "mapper.xml", gencodeEntity.getMapperXmlFilePath()+"/"+gencodeEntity.getMapperXmlFilePackage().replace(".", "/")+"/"+gencodeEntity.getModuleNameCapi()+"Mapper.xml");  
+		FreeMarkerUtil.crateFile(viewMap, "mapper.ftl", gencodeEntity.getMapperFilePath()+"/"+gencodeEntity.getMapperFilePackage().replace(".", "/")+"/"+gencodeEntity.getModuleNameCapi()+"Mapper.java");  
 //		
 		/**
 		 * 生成Mapper.java
 		 */
-		FreeMarkerUtil.crateFile(viewMap, "Entity.java", "G:/workspace_e/admin/src/main/webapp/down/"+gencodeEntity.getModuleNameCapi()+"Entity.java");  
+		FreeMarkerUtil.crateFile(viewMap, "entity.ftl", gencodeEntity.getEntityFilePath()+"/"+gencodeEntity.getEntityFilePackage().replace(".", "/")+"/"+gencodeEntity.getModuleNameCapi()+"Entity.java");  
 		
 		
 		
