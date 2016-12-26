@@ -67,7 +67,7 @@ public class FreeMarkerUtil {
 	 */
 	public static void crateFile(Map<String, Object> data, String templateFileName, String outFileName) {
 		if (!isInit) {
-			System.out.println("FreeMarker模板引擎未初始化,请确认已经调用initFreeMarker()方法对其进行了初始化");
+			initFreeMarker();
 		}
 		Writer out = null;
 		try {

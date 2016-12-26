@@ -26,7 +26,7 @@ public  class GencodeConfig {
 		
 		genCodeEntity.setMapperXmlFilePackage("mapper");
 		genCodeEntity.setMapperXmlFilePath("src/main/resources");
-		Gencode gencode = new Gencode();
+		GenCode gencode = new GenCode();
 		try {
 			gencode.gencode(dbEntity,genCodeEntity);
 		} catch (Exception e) {

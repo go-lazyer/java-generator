@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="${mapperPackage}.${moduleNameCapi}Mapper">
+	<resultMap type="${moduleName}Entity" id="${moduleName}Map" autoMapping="true">
+	<#list attrList as key> 
+		<#if key.isPrimaryKey = "1"> 
+			<id column="${key.field}" property="${key.attribute}" />
+		<#else> 
+			<result column="${key.field}" property="${key.attribute}" />
+		</#if>
+	</#list>
+	</resultMap>
+	
+	<insert id="save" parameterType="${moduleName}Entity">
+		insert into ${tableName} (
+	  	<#list attrList as key> 
+			${key.field}<#if key_has_next>,</#if>
+		</#list>
+	    )values (
+	    <#list attrList as key> 
+	    	# {${key.attribute}}<#if key_has_next>,</#if>
+		</#list>
+	    )
+	</insert>
+	
+	<insert id="saveSelective" parameterType="${moduleName}Entity">
+		insert into ${tableName} (
+	  	<#list attrList as key> 
+	  	   <if test="${key.attribute} != null">
+			${key.field}<#if key_has_next>,</#if>
+		   </if>
+		</#list>
+	    )values (
+	    <#list attrList as key> 
+	      <if test="${key.attribute} != null">
+	    	# {${key.attribute}}<#if key_has_next>,</#if>
+		   </if>
+		</#list>
+	    )
+	</insert>
+	
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		 delete from ${tableName}<#list attrList as key><#if key.isPrimaryKey = "1"> where ${key.field} = # {${key.attribute}}</#if></#list>
+	</delete>
+	
+	<delete id="deleteByExample" parameterType="${moduleName}Entity">
+		 delete from ${tableName} 
+	     <if test="condition != null">
+	     where	$ {condition}
+		 </if>
+	</delete>
+	
+	<update id="updateByPrimaryKey" parameterType="${moduleName}Entity">
+		update 	${tableName} set 
+		<#list attrList as key> 
+			${key.field} = # {${key.attribute}}<#if key_has_next>,</#if>
+		</#list>
+		where <#list attrList as key><#if key.isPrimaryKey = "1"> where ${key.field} = # {${key.attribute}}</#if></#list>
+	</update>
+	
+	<update id="updateByPrimaryKeySelective" parameterType="${moduleName}Entity">
+		update 	${tableName} set 
+		<#list attrList as key> 
+	  	   <if test="${key.attribute} != null and ${key.attribute} != 'null'">
+			${key.field} = # {${key.attribute}}<#if key_has_next>,</#if>
+		   </if>
+		</#list>
+		where <#list attrList as key><#if key.isPrimaryKey = "1"> where ${key.field} = # {${key.attribute}}</#if></#list>
+	</update>
+	
+	<update id="updateByExample" parameterType="${moduleName}Entity">
+		update 	${tableName} set 
+		<#list attrList as key> 
+			${key.field} = # {${key.attribute}}<#if key_has_next>,</#if>
+		</#list>
+		<if test="condition != null">
+	     where	$ {condition}
+		 </if>
+	</update>
+	
+	<update id="updateByExampleSelective" parameterType="${moduleName}Entity">
+		update 	${tableName} set 
+		<#list attrList as key> 
+	  	   <if test="${key.attribute} != null and ${key.attribute} != 'null'">
+			${key.field} = # {${key.attribute}}<#if key_has_next>,</#if>
+		   </if>
+		</#list>
+		<if test="condition != null">
+	     where	$ {condition}
+		 </if>
+	</update>
+	
+	<select id="countByExample"  parameterType="${moduleName}Entity" resultType="java.lang.Integer">
+	    select count(*) from ${tableName}
+		<if test="condition != null">
+	     where	$ {condition}
+		 </if>
+	</select>
+	<select id="queryByPrimaryKey"  parameterType="${moduleName}Entity" resultType="java.lang.Integer">
+	    select columnList
+		<if test="columnStr != null and columnStr != 'null'">
+	      $ {columnStr}
+		<else>
+		   *
+		</if>
+ 		from ${tableName}
+        where <#list attrList as key><#if key.isPrimaryKey = "1"> where ${key.field} = # {${key.attribute}}</#if></#list>
+	</select>
+	<select id="queryByExample"  parameterType="${moduleName}Entity" resultType="java.lang.Integer">
+	    select columnList
+		<if test="columnStr != null and columnStr != 'null'">
+	      $ {columnStr}
+		<else> 
+		   *
+		</if>
+ 		from ${tableName}
+		<if test="condition != null">
+	     where	$ {condition}
+		 </if>
+	</select>
+</mapper>
