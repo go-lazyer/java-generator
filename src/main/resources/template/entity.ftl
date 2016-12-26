@@ -11,7 +11,7 @@ public class ${moduleNameCapi}Entity{
     <#list attrList as key> 
 	private ${key.attrType} ${key.attribute}; //${key.comment}
     </#list>
-    private String columnStr;//需要查询的字段默认为 所有
+    private String columnStr = "*";//需要查询的字段默认为所有
     
     private String condition; //where 条件
     

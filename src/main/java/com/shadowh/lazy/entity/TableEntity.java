@@ -12,14 +12,12 @@ import com.shadowh.lazy.util.StringUtil;
  * @date 2016年9月18日 上午10:05:13
  */
 public class TableEntity {
-	private String tableName;
 	private String field;
 	private String fieldType;
 	private String attribute;
 	private String attrType;
 	private String comment;
 	private String isPrimaryKey="0";
-	
 	
 	/**
 	 * @param paraMap
@@ -85,14 +83,6 @@ public class TableEntity {
 	}
 	public void setIsPrimaryKey(String isPrimaryKey) {
 		this.isPrimaryKey = isPrimaryKey;
-	}
-	
-	
-	public String getTableName() {
-		return tableName;
-	}
-	public void setTableName(String tableName) {
-		this.tableName = tableName;
 	}
 	@Override
 	public String toString() {

@@ -5,25 +5,21 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 import javax.sql.DataSource;
 
 import org.apache.commons.dbcp.BasicDataSource;
-import org.apache.commons.dbutils.DbUtils;
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.BeanHandler;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
 import org.apache.commons.dbutils.handlers.MapHandler;
 import org.apache.commons.dbutils.handlers.MapListHandler;
 import org.apache.commons.dbutils.handlers.ScalarHandler;
-import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.shadowh.lazy.entity.DatabaseEntity;
 
-@SuppressWarnings("all")
 public class JdbcUtil {
 	private static DataSource dataSource;
 	private static Logger logger = LoggerFactory.getLogger(JdbcUtil.class);
@@ -228,10 +224,11 @@ public class JdbcUtil {
 	 * @throws SQLException 
 	 * @date 2014年10月11日 下午4:25:46
 	 */
+	@SuppressWarnings("unchecked")
 	public long queryCount(String sql) throws SQLException {
 		logger.info(sql);
 		QueryRunner queryRunner = new QueryRunner(dataSource);
-		long count = queryRunner.query(sql, new ScalarHandler(1));
+		long count = (long)queryRunner.query(sql, new ScalarHandler(1));
 		return count;
 	}
 
