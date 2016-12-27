@@ -16,8 +16,11 @@ public class TableEntity {
 	private String fieldType;
 	private String attribute;
 	private String attrType;
+	private String extra;//是否自增
 	private String comment;
 	private String isPrimaryKey="0";
+	private String isNullable;
+	private String defaultValue;
 	
 	/**
 	 * @param paraMap
@@ -28,7 +31,10 @@ public class TableEntity {
 	public List<TableEntity> queryFieldList(DatabaseEntity dbsEntity, String tableName) {
 		
 		JdbcUtil jdbcUtil=new JdbcUtil(dbsEntity);
-		String sql="select column_name field,data_type fieldType,column_comment comment,column_key isPrimaryKey  from information_schema.COLUMNS where table_name = '"+tableName+"' and table_schema = '"+dbsEntity.getName()+"'";
+		String sql="select column_name field,data_type fieldType,column_comment comment,column_key isPrimaryKey, "
+				+ " is_nullable isNullable  ,column_default defaultValue,extra"
+				+ " from information_schema.COLUMNS "
+				+ " where table_name = '"+tableName+"' and table_schema = '"+dbsEntity.getName()+"'";
 		List<TableEntity> fieldList = null;
 		try {
 			fieldList = jdbcUtil.query(TableEntity.class,sql);
@@ -37,7 +43,7 @@ public class TableEntity {
 				if("PRI".equals(field.getIsPrimaryKey())){
 					field.setIsPrimaryKey("1");
 				}
-				if(field.getFieldType().indexOf("int")!=-1){
+				if(field.getFieldType().indexOf("int")!=-1||"decimal".equals(field.getFieldType())){
 					field.setAttrType("Integer");
 				}else{
 					field.setAttrType("String");
@@ -84,10 +90,33 @@ public class TableEntity {
 	public void setIsPrimaryKey(String isPrimaryKey) {
 		this.isPrimaryKey = isPrimaryKey;
 	}
+	
+	public String getIsNullable() {
+		return isNullable;
+	}
+	public void setIsNullable(String isNullable) {
+		this.isNullable = isNullable;
+	}
+	
+	public String getDefaultValue() {
+		return defaultValue;
+	}
+	public void setDefaultValue(String defaultValue) {
+		this.defaultValue = defaultValue;
+	}
+	
+	
+	
+	public String getExtra() {
+		return extra;
+	}
+	public void setExtra(String extra) {
+		this.extra = extra;
+	}
 	@Override
 	public String toString() {
-		return "FieldEntity [field=" + field + ", fieldType=" + fieldType + ", attribute=" + attribute + ", attrType="
-				+ attrType + ", comment=" + comment + ", isPrimaryKey=" + isPrimaryKey + "]";
+		return "TableEntity [field=" + field + ", fieldType=" + fieldType + ", attribute=" + attribute + ", attrType=" + attrType + ", extra=" + extra + ", comment=" + comment + ", isPrimaryKey=" + isPrimaryKey + ", isNullable=" + isNullable + ", defaultValue=" + defaultValue + "]";
 	}
+
 	
 }

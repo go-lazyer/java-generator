@@ -23,7 +23,43 @@ public class ${moduleNameCapi}Entity{
     
     <#list attrList as key> 
 	public ${key.attrType} get${key.attribute?cap_first}() {
-		return ${key.attribute};
+		<#if key.attrType = "Integer"> 
+		if(${key.attribute}==null){
+			return 0;
+		}else{
+			return ${key.attribute};
+		}
+		<#elseif  key.fieldType = "datetime"> 
+		if(${key.attribute}==null||"null".equalsIgnoreCase(${key.attribute})){
+			return "0000-00-00 00:00:00";
+		}else{
+			return ${key.attribute};
+		}
+		<#elseif  key.fieldType = "date"> 
+		if(${key.attribute}==null||"null".equalsIgnoreCase(${key.attribute})){
+			return "0000-00-00";
+		}else{
+			return ${key.attribute};
+		}
+		<#elseif  key.fieldType = "timestamp"> 
+		if(${key.attribute}==null||"null".equalsIgnoreCase(${key.attribute})){
+			return "0000-00-00 00:00:00";
+		}else{
+			return ${key.attribute};
+		}
+		<#elseif  key.fieldType = "enum"> 
+		if(${key.attribute}==null||"null".equalsIgnoreCase(${key.attribute})){
+			return "0";
+		}else{
+			return ${key.attribute};
+		}
+		<#elseif  key.attrType = "String"> 
+		if(${key.attribute}==null||"null".equalsIgnoreCase(${key.attribute})){
+			return "";
+		}else{
+			return ${key.attribute};
+		}
+		</#if>
 	}
 	public void set${key.attribute?cap_first}(${key.attrType} ${key.attribute}) {
 		this.${key.attribute} = ${key.attribute};

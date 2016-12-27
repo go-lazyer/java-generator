@@ -78,7 +78,7 @@ public interface ${moduleNameCapi}Mapper {
 	 * @author ${author}
 	 * @date ${updateTime}
 	 */
-	public ${moduleNameCapi}Entity queryByPrimaryKey(String id);
+	public ${moduleNameCapi}Entity queryByPrimaryKey(${moduleNameCapi}Entity ${moduleName}Entity);
 
 	/**
 	 * 按条件查询${moduleNameCn}

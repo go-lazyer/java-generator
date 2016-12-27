@@ -5,7 +5,7 @@ import org.junit.Test;
 import com.shadowh.lazy.entity.DatabaseEntity;
 import com.shadowh.lazy.entity.GenCodeEntity;
 
-public  class GencodeConfig {
+public class GencodeConfig {
 	
 	public static void main(String[] args) {
 		DatabaseEntity dbEntity= new DatabaseEntity();

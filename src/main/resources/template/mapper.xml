@@ -17,8 +17,8 @@
 			${key.field}<#if key_has_next>,</#if>
 		</#list>
 	    )values (
-	    <#list attrList as key> 
-	    	${r"#{"}${key.attribute}${r"}"}<#if key_has_next>,</#if>
+	    <#list attrList as key>
+	        ${r"#{"}${key.attribute}${r"}"}<#if key_has_next>,</#if>
 		</#list>
 	    )
 	</insert>
@@ -47,7 +47,7 @@
 	<delete id="deleteByExample" parameterType="${moduleName}Entity">
 		 delete from ${tableName} 
 	     <if test="condition != null">
-	     where ${r"${condition}"}
+	     ${r"${condition}"}
 		 </if>
 	</delete>
 	
@@ -75,7 +75,7 @@
 			${key.field} = ${r"#{"}${key.attribute}${r"}"}<#if key_has_next>,</#if>
 		</#list>
 		<if test="condition != null">
-	     where ${r"${condition}"}
+	     ${r"${condition}"}
 		 </if>
 	</update>
 
@@ -87,14 +87,14 @@
 		   </if>
 		</#list>
 		<if test="condition != null">
-	     where ${r"${condition}"}
+	     ${r"${condition}"}
 		 </if>
 	</update>
 
 	<select id="countByExample"  parameterType="${moduleName}Entity" resultType="java.lang.Integer">
 	    select count(*) from ${tableName}
 		<if test="condition != null">
-	     where ${r"${condition}"}
+	     ${r"${condition}"}
 		 </if>
 	</select>
 	
@@ -105,7 +105,7 @@
             <otherwise> * </otherwise>
          </choose>		
  		from ${tableName}
-        where <#list attrList as key><#if key.isPrimaryKey = "1"> where ${key.field} = ${r"#{"}${key.attribute}${r"}"}</#if></#list>
+        <#list attrList as key><#if key.isPrimaryKey = "1"> where ${key.field} = ${r"#{"}${key.attribute}${r"}"}</#if></#list>
 	</select>
 	
 	<select id="queryByExample"  parameterType="${moduleName}Entity" resultType="${moduleName}Entity">
@@ -116,7 +116,7 @@
          </choose>	
  		from ${tableName}
 		<if test="condition != null">
-	     where ${r"${condition}"}
+	     ${r"${condition}"}
 		 </if>
 	</select>
 </mapper>
