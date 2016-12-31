@@ -1,15 +1,12 @@
 package com.shadowh.lazy.entity;
 
-public class GenCodeEntity {
-	private String tableName;
-	private String moduleName;
-	private String moduleNameCapi;//首字母大写的模块名
-	private String moduleNameCn;
+public class GlobalConfigEntity {
 	private String entityFilePath;
 	private String entityFilePackage;
 	
 	private String serviceFilePath;
 	private String serviceFilePackage;
+	
 	private String serviceImplFilePath;
 	private String serviceImplFilePackage;
 	
@@ -21,30 +18,6 @@ public class GenCodeEntity {
 	
 	private String author;//作者
 	private String updateTime;
-	public String getTableName() {
-		return tableName;
-	}
-	public void setTableName(String tableName) {
-		this.tableName = tableName;
-	}
-	public String getModuleName() {
-		return moduleName;
-	}
-	public void setModuleName(String moduleName) {
-		this.moduleName = moduleName;
-	}
-	public String getModuleNameCapi() {
-		return moduleNameCapi;
-	}
-	public void setModuleNameCapi(String moduleNameCapi) {
-		this.moduleNameCapi = moduleNameCapi;
-	}
-	public String getModuleNameCn() {
-		return moduleNameCn;
-	}
-	public void setModuleNameCn(String moduleNameCn) {
-		this.moduleNameCn = moduleNameCn;
-	}
 
 	public String getEntityFilePath() {
 		return entityFilePath;
@@ -121,7 +94,9 @@ public class GenCodeEntity {
 	}
 	@Override
 	public String toString() {
-		return "GenCodeEntity [tableName=" + tableName + ", moduleName=" + moduleName + ", moduleNameCapi=" + moduleNameCapi + ", moduleNameCn=" + moduleNameCn + ", entityFilePath=" + entityFilePath + ", serviceFilePath=" + serviceFilePath + ", serviceImplFilePath=" + serviceImplFilePath + ", mapperFilePath=" + mapperFilePath + ", mapperXmlFilePath=" + mapperXmlFilePath + ", author=" + author + ", updateTime=" + updateTime + "]";
+		return "GlobalConfigEntity [entityFilePath=" + entityFilePath + ", entityFilePackage=" + entityFilePackage + ", serviceFilePath=" + serviceFilePath + ", serviceFilePackage=" + serviceFilePackage + ", serviceImplFilePath=" + serviceImplFilePath + ", serviceImplFilePackage=" + serviceImplFilePackage + ", mapperFilePath=" + mapperFilePath + ", mapperFilePackage=" + mapperFilePackage + ", mapperXmlFilePath=" + mapperXmlFilePath + ", mapperXmlFilePackage=" + mapperXmlFilePackage + ", author=" + author + ", updateTime=" + updateTime + "]";
 	}
+	
+	
 	
 }

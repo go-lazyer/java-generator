@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<lazy-conf>
+	<properties>
+		<property name="config" value="config.properties" />
+		<property name="author" value="hanchanghong" />
+	</properties>
+	<data-source >
+		<property name="driver" value="com.mysql.jdbc.Driver"></property>
+		<property name="url" value="jdbc:mysql://localhost:3306/whmcs?useUnicode=true&amp;characterEncoding=utf8&amp;allowMultiQueries=true&amp;zeroDateTimeBehavior=convertToNull" />
+		<property name="username" value="root" />
+		<property name="password" value="123" />
+	</data-source>
+	<entity file-package="cn.entity" file-path="src/main/java" />
+	<mapper file-package="cn.mapper" file-path="src/main/java" />
+	<mapper-xml file-package="cn.mapper" file-path="src/main/java" />
+	<service file-package="cn.daoway.api.db.model" file-path="daoway" />
+	<service-impl file-package="cn.daoway.api.db.model" file-path="daoway" />
+	<table table-name="tblorders" id="order">
+		<property name="module-name" value="order" />
+	</table>
+</lazy-conf>

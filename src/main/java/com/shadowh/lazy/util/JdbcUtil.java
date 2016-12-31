@@ -18,7 +18,7 @@ import org.apache.commons.dbutils.handlers.ScalarHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.shadowh.lazy.entity.DatabaseEntity;
+import com.shadowh.lazy.entity.DataSourceEntity;
 
 public class JdbcUtil {
 	private static DataSource dataSource;
@@ -26,14 +26,11 @@ public class JdbcUtil {
 	public static ThreadLocal<Connection> threadLocal = new ThreadLocal<Connection>();
 	private QueryRunner queryRunner;
 	
-	public JdbcUtil(DatabaseEntity dbEntity) {
+	public JdbcUtil(DataSourceEntity dataSourceEntity) {
         try {  
-        	String port = dbEntity.getPort();
-        	String name = dbEntity.getName();
-        	String host = dbEntity.getHost();
-            String url ="jdbc:mysql://"+host+":"+port+"/"+name+"?useUnicode=true&characterEncoding=utf8&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull";
-            String username = dbEntity.getUsername();
-            String password =  dbEntity.getPassword();
+            String url =dataSourceEntity.getUrl();
+            String username = dataSourceEntity.getUsername();
+            String password =  dataSourceEntity.getPassword();
             String driverName =  "com.mysql.jdbc.Driver"; 
             BasicDataSource basicDataSource = new BasicDataSource();  
             basicDataSource.setUrl(url);  

@@ -11,7 +11,65 @@
 	</#list>
 	</resultMap>
 	
-	<insert id="save" parameterType="${moduleName}Entity">
+	<sql id="select_example_where">
+	    <where>
+	      <foreach collection="criteriaList" item="criteria" separator="or">
+	        <if test="criteria.valid">
+	          <trim prefix="(" prefixOverrides="and" suffix=")">
+	            <foreach collection="criteria.criteria" item="criterion">
+	              <choose>
+	                <when test="criterion.noValue">
+	                  and ${r"${criterion.condition}"}
+	                </when>
+	                <when test="criterion.singleValue">
+	                  and ${r"${criterion.condition}"} ${r"#{criterion.value}"}
+	                </when>
+	                <when test="criterion.betweenValue">
+	                  and ${r"${criterion.condition}"} ${r"#{criterion.value}"} and ${r"#{criterion.secondValue}"}
+	                </when>
+	                <when test="criterion.listValue">
+	                  and ${r"${criterion.condition}"}
+	                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+	                    ${r"#{listItem}"}
+	                  </foreach>
+	                </when>
+	              </choose>
+	            </foreach>
+	          </trim>
+	        </if>
+	      </foreach>
+	    </where>
+  	</sql>
+	<sql id="update_example_where">
+	    <where>
+	      <foreach collection="example.criteriaList" item="criteria" separator="or">
+	        <if test="criteria.valid">
+	          <trim prefix="(" prefixOverrides="and" suffix=")">
+	            <foreach collection="criteria.criteria" item="criterion">
+	              <choose>
+	                <when test="criterion.noValue">
+	                  and ${r"${criterion.condition}"}
+	                </when>
+	                <when test="criterion.singleValue">
+	                  and ${r"${criterion.condition}"} ${r"#{criterion.value}"}
+	                </when>
+	                <when test="criterion.betweenValue">
+	                  and ${r"${criterion.condition}"} ${r"#{criterion.value}"} and ${r"#{criterion.secondValue}"}
+	                </when>
+	                <when test="criterion.listValue">
+	                  and ${r"${criterion.condition}"}
+	                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+	                    ${r"#{listItem}"}
+	                  </foreach>
+	                </when>
+	              </choose>
+	            </foreach>
+	          </trim>
+	        </if>
+	      </foreach>
+	    </where>
+  	</sql>
+	<insert id="save" parameterType="${entityPackage}.${moduleNameCapi}Entity">
 		insert into ${tableName} (
 	  	<#list attrList as key> 
 			${key.field}<#if key_has_next>,</#if>
@@ -23,7 +81,7 @@
 	    )
 	</insert>
 	
-	<insert id="saveSelective" parameterType="${moduleName}Entity">
+	<insert id="saveSelective" parameterType="${entityPackage}.${moduleNameCapi}Entity">
 		insert into ${tableName} (
 	  	<#list attrList as key> 
 	  	   <if test="${key.attribute} != null">
@@ -44,79 +102,87 @@
          where <#list attrList as key><#if key.isPrimaryKey = "1"> ${key.field} = ${r"#{"}${key.attribute}${r"}"}</#if></#list>
 	</delete>
 	
-	<delete id="deleteByExample" parameterType="${moduleName}Entity">
+	<delete id="deleteByExample" parameterType="${entityPackage}.${moduleNameCapi}Example">
 		 delete from ${tableName} 
-	     <if test="condition != null">
-	     ${r"${condition}"}
-		 </if>
+    <if test="_parameter != null">
+      <include refid="select_example_where" />
+    </if>
 	</delete>
 	
-	<update id="updateByPrimaryKey" parameterType="${moduleName}Entity">
+	<update id="updateByPrimaryKey" parameterType="${entityPackage}.${moduleNameCapi}Entity">
 		update 	${tableName} set 
 		<#list attrList as key> 
+			<#if key.isPrimaryKey != "1">
 			${key.field} = ${r"#{"}${key.attribute}${r"}"}<#if key_has_next>,</#if>
+			</#if>
 		</#list>
 		where <#list attrList as key><#if key.isPrimaryKey = "1"> ${key.field} = ${r"#{"}${key.attribute}${r"}"}</#if></#list>
 	</update>
 	
-	<update id="updateByPrimaryKeySelective" parameterType="${moduleName}Entity">
-		update 	${tableName} set 
+	<update id="updateByPrimaryKeySelective" parameterType="${entityPackage}.${moduleNameCapi}Entity">
+		update 	${tableName}
+		<set> 
 		<#list attrList as key> 
-	  	   <if test="${key.attribute} != null and ${key.attribute} != 'null'">
-			${key.field} = ${r"#{"}${key.attribute}${r"}"}<#if key_has_next>,</#if>
+		<#if key.isPrimaryKey != "1">
+	  	   <if test="${key.attribute} != null">
+			${key.field} = ${r"#{"}${key.attribute}${r"}"},
 		   </if>
+		</#if>
 		</#list>
+        </set>
 		where <#list attrList as key><#if key.isPrimaryKey = "1"> ${key.field} = ${r"#{"}${key.attribute}${r"}"}</#if></#list>
 	</update>
 	
-	<update id="updateByExample" parameterType="${moduleName}Entity">
+	<update id="updateByExample" parameterType="map">
 		update 	${tableName} set 
 		<#list attrList as key> 
-			${key.field} = ${r"#{"}${key.attribute}${r"}"}<#if key_has_next>,</#if>
+		<#if key.isPrimaryKey != "1">
+			${key.field} = ${r"#{entity."}${key.attribute}${r"}"}<#if key_has_next>,</#if>
+		</#if>
 		</#list>
-		<if test="condition != null">
-	     ${r"${condition}"}
-		 </if>
+    <if test="_parameter != null">
+      <include refid="update_example_where" />
+    </if>
 	</update>
 
-	<update id="updateByExampleSelective" parameterType="${moduleName}Entity">
-		update 	${tableName} set 
+	<update id="updateByExampleSelective" parameterType="map">
+		update 	${tableName}
+        <set> 
 		<#list attrList as key> 
-	  	   <if test="${key.attribute} != null and ${key.attribute} != 'null'">
-			${key.field} = ${r"#{"}${key.attribute}${r"}"}<#if key_has_next>,</#if>
+		<#if key.isPrimaryKey != "1">
+	  	   <if test="entity.${key.attribute} != null and entity.${key.attribute} != 'null'">
+			${key.field} = ${r"#{entity."}${key.attribute}${r"}"},
 		   </if>
+		</#if>
 		</#list>
-		<if test="condition != null">
-	     ${r"${condition}"}
-		 </if>
+		</set>
+    <if test="_parameter != null">
+      <include refid="update_example_where" />
+    </if>
 	</update>
 
-	<select id="countByExample"  parameterType="${moduleName}Entity" resultType="java.lang.Integer">
+	<select id="countByExample"  parameterType="${entityPackage}.${moduleNameCapi}Example" resultType="java.lang.Integer">
 	    select count(*) from ${tableName}
-		<if test="condition != null">
-	     ${r"${condition}"}
-		 </if>
+    <if test="_parameter != null">
+      <include refid="select_example_where" />
+    </if>
 	</select>
 	
-	<select id="queryByPrimaryKey"  parameterType="${moduleName}Entity" resultType="${moduleName}Entity">
-	    select 
-		<choose>
-            <when test="columnStr != null and columnStr != 'null'"> ${r"${columnStr}"}</when>
-            <otherwise> * </otherwise>
-         </choose>		
+	<select id="queryByPrimaryKey"  parameterType="java.lang.String" resultType="${entityPackage}.${moduleNameCapi}Entity">
+	    select *		
  		from ${tableName}
         <#list attrList as key><#if key.isPrimaryKey = "1"> where ${key.field} = ${r"#{"}${key.attribute}${r"}"}</#if></#list>
 	</select>
 	
-	<select id="queryByExample"  parameterType="${moduleName}Entity" resultType="${moduleName}Entity">
+	<select id="queryByExample"  parameterType="${entityPackage}.${moduleNameCapi}Example" resultType="${entityPackage}.${moduleNameCapi}Entity">
 	    select 
 		<choose>
             <when test="columnStr != null and columnStr != 'null'"> ${r"${columnStr}"}</when>
             <otherwise> * </otherwise>
          </choose>	
  		from ${tableName}
-		<if test="condition != null">
-	     ${r"${condition}"}
-		 </if>
+    <if test="_parameter != null">
+      <include refid="select_example_where" />
+    </if>
 	</select>
 </mapper>

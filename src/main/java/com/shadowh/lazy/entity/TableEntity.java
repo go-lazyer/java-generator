@@ -12,110 +12,63 @@ import com.shadowh.lazy.util.StringUtil;
  * @date 2016年9月18日 上午10:05:13
  */
 public class TableEntity {
-	private String field;
-	private String fieldType;
-	private String attribute;
-	private String attrType;
-	private String extra;//是否自增
-	private String comment;
-	private String isPrimaryKey="0";
-	private String isNullable;
-	private String defaultValue;
+	private String id;
+	private String tableName;
+	private String moduleName;
+	private String moduleNameCapi;
+	private List<FieldEntity> fieldList;
+	private List<JoinTableEntity> joinTableList;
 	
-	/**
-	 * @param paraMap
-	 * @return
-	 * @author hanchanghong
-	 * @date 2016年5月2日 下午9:28:20
-	 */
-	public List<TableEntity> queryFieldList(DatabaseEntity dbsEntity, String tableName) {
-		
-		JdbcUtil jdbcUtil=new JdbcUtil(dbsEntity);
-		String sql="select column_name field,data_type fieldType,column_comment comment,column_key isPrimaryKey, "
-				+ " is_nullable isNullable  ,column_default defaultValue,extra"
-				+ " from information_schema.COLUMNS "
-				+ " where table_name = '"+tableName+"' and table_schema = '"+dbsEntity.getName()+"'";
-		List<TableEntity> fieldList = null;
-		try {
-			fieldList = jdbcUtil.query(TableEntity.class,sql);
-			for (TableEntity field : fieldList) {
-				field.setAttribute( StringUtil.underlineToCamel(field.getField()));
-				if("PRI".equals(field.getIsPrimaryKey())){
-					field.setIsPrimaryKey("1");
-				}
-				if(field.getFieldType().indexOf("int")!=-1||"decimal".equals(field.getFieldType())){
-					field.setAttrType("Integer");
-				}else{
-					field.setAttrType("String");
-				}
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getTableName() {
+		return tableName;
+	}
+
+	public void setTableName(String tableName) {
+		this.tableName = tableName;
+	}
+
+	public String getModuleName() {
+		return moduleName;
+	}
+
+	public void setModuleName(String moduleName) {
+		this.moduleName = moduleName;
+		if(StringUtil.isNotEmpty(moduleName)){
+			this.moduleNameCapi=StringUtil.firstUpperCase(moduleName);
 		}
+	}
+
+
+	public String getModuleNameCapi() {
+		return moduleNameCapi;
+	}
+
+	public void setModuleNameCapi(String moduleNameCapi) {
+		this.moduleNameCapi = moduleNameCapi;
+	}
+
+	public List<FieldEntity> getFieldList() {
 		return fieldList;
 	}
-	public String getField() {
-		return field;
+
+	public void setFieldList(List<FieldEntity> fieldList) {
+		this.fieldList = fieldList;
 	}
-	public void setField(String field) {
-		this.field = field;
+
+	public List<JoinTableEntity> getJoinTableList() {
+		return joinTableList;
 	}
-	public String getFieldType() {
-		return fieldType;
-	}
-	public void setFieldType(String fieldType) {
-		this.fieldType = fieldType;
-	}
-	public String getAttribute() {
-		return attribute;
-	}
-	public void setAttribute(String attribute) {
-		this.attribute = attribute;
-	}
-	public String getAttrType() {
-		return attrType;
-	}
-	public void setAttrType(String attrType) {
-		this.attrType = attrType;
-	}
-	public String getComment() {
-		return comment;
-	}
-	public void setComment(String comment) {
-		this.comment = comment;
-	}
-	public String getIsPrimaryKey() {
-		return isPrimaryKey;
-	}
-	public void setIsPrimaryKey(String isPrimaryKey) {
-		this.isPrimaryKey = isPrimaryKey;
-	}
-	
-	public String getIsNullable() {
-		return isNullable;
-	}
-	public void setIsNullable(String isNullable) {
-		this.isNullable = isNullable;
-	}
-	
-	public String getDefaultValue() {
-		return defaultValue;
-	}
-	public void setDefaultValue(String defaultValue) {
-		this.defaultValue = defaultValue;
-	}
-	
-	
-	
-	public String getExtra() {
-		return extra;
-	}
-	public void setExtra(String extra) {
-		this.extra = extra;
-	}
-	@Override
-	public String toString() {
-		return "TableEntity [field=" + field + ", fieldType=" + fieldType + ", attribute=" + attribute + ", attrType=" + attrType + ", extra=" + extra + ", comment=" + comment + ", isPrimaryKey=" + isPrimaryKey + ", isNullable=" + isNullable + ", defaultValue=" + defaultValue + "]";
+
+	public void setJoinTableList(List<JoinTableEntity> joinTableList) {
+		this.joinTableList = joinTableList;
 	}
 
 	
