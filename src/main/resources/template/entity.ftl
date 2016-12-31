@@ -10,29 +10,24 @@ public class ${moduleNameCapi}Entity{
 	private ${key.attrType} ${key.attribute}; //${key.comment}
     </#list>
 
-	public ${moduleNameCapi}Entity() {
-		super();
-	}
-	
-	
-	public ${moduleNameCapi}Entity(Boolean defaultValue) {
-		if(defaultValue){
-		<#list attrList as key> 
+	public void initDefaultValue() {
+	<#list attrList as key> 
+		if(${key.attribute}==null){
 			<#if key.attrType = "Integer"> 
-			this.${key.attribute} = 0; 
+			${key.attribute} = 0; 
 			<#elseif  key.fieldType = "datetime"> 
-			this.${key.attribute} = "0000-00-00 00:00:00";
+			${key.attribute} = "0000-00-00 00:00:00";
 			<#elseif  key.fieldType = "date"> 
-			this.${key.attribute} = "0000-00-00";
-           <#elseif  key.fieldType = "timestamp"> 
-			this.${key.attribute} = "0000-00-00 00:00:00";
-		   <#elseif  key.fieldType = "enum"> 
-			this.${key.attribute} = "0";
-		   <#elseif  key.attrType = "String"> 
-			this.${key.attribute} = "";
-		   </#if>
-		</#list>
+			${key.attribute} = "0000-00-00";
+			<#elseif  key.fieldType = "timestamp"> 
+			${key.attribute} = "0000-00-00 00:00:00";
+			<#elseif  key.fieldType = "enum"> 
+			${key.attribute} = "0";
+			<#elseif  key.attrType = "String"> 
+			${key.attribute} = "";
+			</#if>
 		}
+	</#list>
 	}
     
     <#list attrList as key> 
