@@ -22,6 +22,7 @@ import org.joda.time.DateTime;
 import com.shadowh.lazy.entity.DataSourceEntity;
 import com.shadowh.lazy.entity.FieldEntity;
 import com.shadowh.lazy.entity.GlobalConfigEntity;
+import com.shadowh.lazy.entity.JoinTableEntity;
 import com.shadowh.lazy.entity.TableEntity;
 import com.shadowh.lazy.util.FreeMarkerUtil;
 import com.shadowh.lazy.util.StringUtil;
@@ -51,13 +52,23 @@ public class GenerateCode {
 		viewMap.put("mapperPackage", globalConfigEntity.getMapperFilePackage());
 		viewMap.put("mapperPackage", globalConfigEntity.getMapperFilePackage());
 
-		FieldEntity fieldEntity = new FieldEntity();
 		for (TableEntity tableEntity : tableList) {
-			viewMap.put("tableName", tableEntity.getTableName());
-			viewMap.put("moduleName", tableEntity.getModuleName());
-			viewMap.put("moduleNameCapi", tableEntity.getModuleNameCapi());
-			List<FieldEntity> fieldList = fieldEntity.queryFieldList(dataSource, tableEntity.getTableName());
-			viewMap.put("attrList", fieldList);
+//			viewMap.put("tableName", tableEntity.getTableName());
+//			viewMap.put("moduleName", tableEntity.getModuleName());
+//			viewMap.put("moduleNameCapi", tableEntity.getModuleNameCapi());
+			List<FieldEntity> fieldList = FieldEntity.queryFieldList(dataSource, tableEntity.getTableName());
+//			viewMap.put("attrList", fieldList);
+			tableEntity.setFields(fieldList);
+			
+			List<JoinTableEntity> manyTableList = tableEntity.getJoinTables();
+			if(manyTableList!=null&&!manyTableList.isEmpty()){
+				for (JoinTableEntity manyTableEntity : manyTableList) {
+					List<FieldEntity> manyTablefield = FieldEntity.queryFieldList(dataSource, manyTableEntity.getTableName());
+					manyTableEntity.setFieldList(manyTablefield);
+				}
+			}
+			viewMap.put("table", tableEntity);
+			
 			FreeMarkerUtil.crateFile(viewMap, "entity.ftl", globalConfigEntity.getEntityFilePath() + "/" + globalConfigEntity.getEntityFilePackage().replace(".", "/") + "/" + tableEntity.getModuleNameCapi() + "Entity.java");
 			FreeMarkerUtil.crateFile(viewMap, "example.ftl", globalConfigEntity.getEntityFilePath() + "/" + globalConfigEntity.getEntityFilePackage().replace(".", "/") + "/" + tableEntity.getModuleNameCapi() + "Example.java");
 			FreeMarkerUtil.crateFile(viewMap, "mapper.xml", globalConfigEntity.getMapperXmlFilePath() + "/" + globalConfigEntity.getMapperXmlFilePackage().replace(".", "/") + "/" + tableEntity.getModuleNameCapi() + "Mapper.xml");
@@ -159,6 +170,30 @@ public class GenerateCode {
 						default:
 							break;
 						}
+					}
+					Element joinTableElement = tableElement.element("join-table");
+					if(joinTableElement!=null){
+						List<JoinTableEntity> joinTableList= new ArrayList<JoinTableEntity>();
+						List<Element> joinTableElements = joinTableElement.elements("property");
+						for (Element element : joinTableElements) {
+							JoinTableEntity manyTableEntity= new JoinTableEntity();
+							List<Attribute> attributes = element.attributes();
+							for (Attribute attribute : attributes) {
+								switch (attribute.getName()) {
+								case "table-name":
+									manyTableEntity.setTableName(attribute.getValue());
+									break;
+								case "foreign-key":
+									manyTableEntity.setForeignKey(attribute.getValue());
+									break;
+								default:
+									break;
+								}
+							}
+							
+							joinTableList.add(manyTableEntity);
+						}
+						tableEntity.setJoinTables(joinTableList);
 					}
 					tableList.add(tableEntity);
 				}

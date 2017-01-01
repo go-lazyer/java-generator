@@ -2,65 +2,65 @@ package ${mapperPackage};
 
 import java.util.List;
 
-import ${entityPackage}.${moduleNameCapi}Entity;
-import ${entityPackage}.${moduleNameCapi}Example;
+import ${entityPackage}.${table.moduleNameCapi}Entity;
+import ${entityPackage}.${table.moduleNameCapi}Example;
 import org.apache.ibatis.annotations.Param;
 
-public interface ${moduleNameCapi}Mapper {
+public interface ${table.moduleNameCapi}Mapper {
 
 	/**
-	 * 保存${moduleName}
+	 * 保存${table.moduleName}
 	 * @author ${author}
 	 * @date ${updateTime}
 	 */
-	public int save(${moduleNameCapi}Entity entity);
+	public int save(${table.moduleNameCapi}Entity entity);
 	
 	/**
-	 * 选择性的保存${moduleName}
+	 * 选择性的保存${table.moduleName}
 	 * @author ${author}
 	 * @date ${updateTime}
 	 */
-	public int saveSelective(${moduleNameCapi}Entity entity);
+	public int saveSelective(${table.moduleNameCapi}Entity entity);
 	/**
-	 * 按主键删除${moduleName}
+	 * 按主键删除${table.moduleName}
 	 * @author ${author}
 	 * @date ${updateTime}
 	 */
 	public int deleteByPrimaryKey(String primaryKey);
 	/**
-	 * 按条件删除${moduleName}
+	 * 按条件删除${table.moduleName}
 	 * @author ${author}
 	 * @date ${updateTime}
 	 */
-	public int deleteByExample(${moduleNameCapi}Example example);	
+	public int deleteByExample(${table.moduleNameCapi}Example example);	
 	
 	/**
 	 * 按主键修改全部字段
 	 * @author ${author}
 	 * @date ${updateTime}
 	 */
-	public int updateByPrimaryKey(${moduleNameCapi}Entity entity);
+	public int updateByPrimaryKey(${table.moduleNameCapi}Entity entity);
 	
 	/**
 	 * 按主键选择性的修改字段
 	 * @author ${author}
 	 * @date ${updateTime}
 	 */
-	public int updateByPrimaryKeySelective(${moduleNameCapi}Entity entity);
+	public int updateByPrimaryKeySelective(${table.moduleNameCapi}Entity entity);
 	
 	/**
 	 * 按条件修改全部字段
 	 * @author ${author}
 	 * @date ${updateTime}
 	 */
-	public int updateByExample(@Param("entity") ${moduleNameCapi}Entity entity,@Param("example") ${moduleNameCapi}Example example);
+	public int updateByExample(@Param("entity") ${table.moduleNameCapi}Entity entity,@Param("example") ${table.moduleNameCapi}Example example);
 	
 	/**
 	 * 按条件选择性的修改字段
 	 * @author ${author}
 	 * @date ${updateTime}
 	 */
-	public int updateByExampleSelective(@Param("entity") ${moduleNameCapi}Entity entity,@Param("example") ${moduleNameCapi}Example example);
+	public int updateByExampleSelective(@Param("entity") ${table.moduleNameCapi}Entity entity,@Param("example") ${table.moduleNameCapi}Example example);
 	
 	
 	
@@ -69,21 +69,21 @@ public interface ${moduleNameCapi}Mapper {
 	 * @author ${author}
 	 * @date ${updateTime}
 	 */
-	public Integer countByExample(${moduleNameCapi}Example example);
+	public Integer countByExample(${table.moduleNameCapi}Example example);
 	
 	
 	/**
-	 * 根据id查询${moduleName}
+	 * 根据id查询${table.moduleName}
 	 * @author ${author}
 	 * @date ${updateTime}
 	 */
-	public ${moduleNameCapi}Entity queryByPrimaryKey(String primaryKey);
+	public ${table.moduleNameCapi}Entity queryByPrimaryKey(String primaryKey);
 
 	/**
-	 * 按条件查询${moduleName}
+	 * 按条件查询${table.moduleName}
 	 * @author ${author}
 	 * @date ${updateTime}
 	 */
-	public List<${moduleNameCapi}Entity> queryByExample(${moduleNameCapi}Example example);
+	public List<${table.moduleNameCapi}Entity> queryByExample(${table.moduleNameCapi}Example example);
 	
 }

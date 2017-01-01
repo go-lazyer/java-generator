@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="${mapperPackage}.${moduleNameCapi}Mapper">
-	<resultMap type="${moduleName}Entity" id="${moduleName}Map" autoMapping="true">
-	<#list attrList as key> 
+<mapper namespace="${mapperPackage}.${table.moduleNameCapi}Mapper">
+	<resultMap type="${table.moduleName}Entity" id="${table.moduleName}Map" autoMapping="true">
+	<#list table.fields as key> 
 		<#if key.isPrimaryKey = "1"> 
 			<id column="${key.field}" property="${key.attribute}" />
 		<#else> 
@@ -69,27 +69,27 @@
 	      </foreach>
 	    </where>
   	</sql>
-	<insert id="save" parameterType="${entityPackage}.${moduleNameCapi}Entity">
-		insert into ${tableName} (
-	  	<#list attrList as key> 
+	<insert id="save" parameterType="${entityPackage}.${table.moduleNameCapi}Entity">
+		insert into ${table.tableName} (
+	  	<#list table.fields as key> 
 			${key.field}<#if key_has_next>,</#if>
 		</#list>
 	    )values (
-	    <#list attrList as key>
+	    <#list table.fields as key>
 	        ${r"#{"}${key.attribute}${r"}"}<#if key_has_next>,</#if>
 		</#list>
 	    )
 	</insert>
 	
-	<insert id="saveSelective" parameterType="${entityPackage}.${moduleNameCapi}Entity">
-		insert into ${tableName} (
-	  	<#list attrList as key> 
+	<insert id="saveSelective" parameterType="${entityPackage}.${table.moduleNameCapi}Entity">
+		insert into ${table.tableName} (
+	  	<#list table.fields as key> 
 	  	   <if test="${key.attribute} != null">
 			${key.field}<#if key_has_next>,</#if>
 		   </if>
 		</#list>
 	    )values (
-	    <#list attrList as key> 
+	    <#list table.fields as key> 
 	      <if test="${key.attribute} != null">
 	       ${r"#{"}${key.attribute}${r"}"}<#if key_has_next>,</#if>
 		   </if>
@@ -98,31 +98,31 @@
 	</insert>
 	
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
-		 delete from ${tableName}
-         where <#list attrList as key><#if key.isPrimaryKey = "1"> ${key.field} = ${r"#{"}${key.attribute}${r"}"}</#if></#list>
+		 delete from ${table.tableName}
+         where <#list table.fields as key><#if key.isPrimaryKey = "1"> ${key.field} = ${r"#{"}${key.attribute}${r"}"}</#if></#list>
 	</delete>
 	
-	<delete id="deleteByExample" parameterType="${entityPackage}.${moduleNameCapi}Example">
-		 delete from ${tableName} 
+	<delete id="deleteByExample" parameterType="${entityPackage}.${table.moduleNameCapi}Example">
+		 delete from ${table.tableName} 
     <if test="_parameter != null">
       <include refid="select_example_where" />
     </if>
 	</delete>
 	
-	<update id="updateByPrimaryKey" parameterType="${entityPackage}.${moduleNameCapi}Entity">
-		update 	${tableName} set 
-		<#list attrList as key> 
+	<update id="updateByPrimaryKey" parameterType="${entityPackage}.${table.moduleNameCapi}Entity">
+		update 	${table.tableName} set 
+		<#list table.fields as key> 
 			<#if key.isPrimaryKey != "1">
 			${key.field} = ${r"#{"}${key.attribute}${r"}"}<#if key_has_next>,</#if>
 			</#if>
 		</#list>
-		where <#list attrList as key><#if key.isPrimaryKey = "1"> ${key.field} = ${r"#{"}${key.attribute}${r"}"}</#if></#list>
+		where <#list table.fields as key><#if key.isPrimaryKey = "1"> ${key.field} = ${r"#{"}${key.attribute}${r"}"}</#if></#list>
 	</update>
 	
-	<update id="updateByPrimaryKeySelective" parameterType="${entityPackage}.${moduleNameCapi}Entity">
-		update 	${tableName}
+	<update id="updateByPrimaryKeySelective" parameterType="${entityPackage}.${table.moduleNameCapi}Entity">
+		update 	${table.tableName}
 		<set> 
-		<#list attrList as key> 
+		<#list table.fields as key> 
 		<#if key.isPrimaryKey != "1">
 	  	   <if test="${key.attribute} != null">
 			${key.field} = ${r"#{"}${key.attribute}${r"}"},
@@ -130,12 +130,12 @@
 		</#if>
 		</#list>
         </set>
-		where <#list attrList as key><#if key.isPrimaryKey = "1"> ${key.field} = ${r"#{"}${key.attribute}${r"}"}</#if></#list>
+		where <#list table.fields as key><#if key.isPrimaryKey = "1"> ${key.field} = ${r"#{"}${key.attribute}${r"}"}</#if></#list>
 	</update>
 	
 	<update id="updateByExample" parameterType="map">
-		update 	${tableName} set 
-		<#list attrList as key> 
+		update 	${table.tableName} set 
+		<#list table.fields as key> 
 		<#if key.isPrimaryKey != "1">
 			${key.field} = ${r"#{entity."}${key.attribute}${r"}"}<#if key_has_next>,</#if>
 		</#if>
@@ -146,9 +146,9 @@
 	</update>
 
 	<update id="updateByExampleSelective" parameterType="map">
-		update 	${tableName}
+		update 	${table.tableName}
         <set> 
-		<#list attrList as key> 
+		<#list table.fields as key> 
 		<#if key.isPrimaryKey != "1">
 	  	   <if test="entity.${key.attribute} != null and entity.${key.attribute} != 'null'">
 			${key.field} = ${r"#{entity."}${key.attribute}${r"}"},
@@ -161,26 +161,26 @@
     </if>
 	</update>
 
-	<select id="countByExample"  parameterType="${entityPackage}.${moduleNameCapi}Example" resultType="java.lang.Integer">
-	    select count(*) from ${tableName}
+	<select id="countByExample"  parameterType="${entityPackage}.${table.moduleNameCapi}Example" resultType="java.lang.Integer">
+	    select count(*) from ${table.tableName}
     <if test="_parameter != null">
       <include refid="select_example_where" />
     </if>
 	</select>
 	
-	<select id="queryByPrimaryKey"  parameterType="java.lang.String" resultType="${entityPackage}.${moduleNameCapi}Entity">
+	<select id="queryByPrimaryKey"  parameterType="java.lang.String" resultType="${entityPackage}.${table.moduleNameCapi}Entity">
 	    select *		
- 		from ${tableName}
-        <#list attrList as key><#if key.isPrimaryKey = "1"> where ${key.field} = ${r"#{"}${key.attribute}${r"}"}</#if></#list>
+ 		from ${table.tableName}
+        <#list table.fields as key><#if key.isPrimaryKey = "1"> where ${key.field} = ${r"#{"}${key.attribute}${r"}"}</#if></#list>
 	</select>
 	
-	<select id="queryByExample"  parameterType="${entityPackage}.${moduleNameCapi}Example" resultType="${entityPackage}.${moduleNameCapi}Entity">
+	<select id="queryByExample"  parameterType="${entityPackage}.${table.moduleNameCapi}Example" resultType="${entityPackage}.${table.moduleNameCapi}Entity">
 	    select 
 		<choose>
             <when test="columnStr != null and columnStr != 'null'"> ${r"${columnStr}"}</when>
             <otherwise> * </otherwise>
          </choose>	
- 		from ${tableName}
+ 		from ${table.tableName}
     <if test="_parameter != null">
       <include refid="select_example_where" />
     </if>

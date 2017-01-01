@@ -1,9 +1,7 @@
 package com.shadowh.lazy.entity;
 
-import java.sql.SQLException;
 import java.util.List;
 
-import com.shadowh.lazy.util.JdbcUtil;
 import com.shadowh.lazy.util.StringUtil;
 
 /**
@@ -16,8 +14,8 @@ public class TableEntity {
 	private String tableName;
 	private String moduleName;
 	private String moduleNameCapi;
-	private List<FieldEntity> fieldList;
-	private List<JoinTableEntity> joinTableList;
+	private List<FieldEntity> fields;
+	private List<JoinTableEntity> joinTables;
 	
 	public String getId() {
 		return id;
@@ -55,21 +53,20 @@ public class TableEntity {
 		this.moduleNameCapi = moduleNameCapi;
 	}
 
-	public List<FieldEntity> getFieldList() {
-		return fieldList;
+	public List<FieldEntity> getFields() {
+		return fields;
 	}
 
-	public void setFieldList(List<FieldEntity> fieldList) {
-		this.fieldList = fieldList;
+	public void setFields(List<FieldEntity> fields) {
+		this.fields = fields;
 	}
 
-	public List<JoinTableEntity> getJoinTableList() {
-		return joinTableList;
+	public List<JoinTableEntity> getJoinTables() {
+		return joinTables;
 	}
 
-	public void setJoinTableList(List<JoinTableEntity> joinTableList) {
-		this.joinTableList = joinTableList;
+	public void setJoinTables(List<JoinTableEntity> joinTables) {
+		this.joinTables = joinTables;
 	}
 
-	
 }

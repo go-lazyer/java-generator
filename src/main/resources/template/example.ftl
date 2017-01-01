@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.LinkedHashMap;
 /**
- * ${moduleName}实体类
+ * ${table.moduleName}实体类
  * @author ${author}
  * @date ${updateTime}
  */
-public class ${moduleNameCapi}Example{
+public class ${table.moduleNameCapi}Example{
     private String columnStr = "*";//需要查询的字段默认为所有
     
     private LinkedHashMap <String,String> orderBy;//排序字段
@@ -19,7 +19,7 @@ public class ${moduleNameCapi}Example{
 	
 	protected boolean distinct;
 	protected List<Criteria> criteriaList;
-	public ${moduleNameCapi}Example() {
+	public ${table.moduleNameCapi}Example() {
 		criteriaList = new ArrayList<Criteria>();
 	}
 	
@@ -124,7 +124,7 @@ public class ${moduleNameCapi}Example{
 			}
 			criteria.add(new Criterion(condition, firstValue, secondValue));
 		}
-	  <#list attrList as key> 
+	  <#list table.fields as key> 
 		private ${key.attrType} ${key.attribute}; //${key.comment}
 
 		public Criteria and${key.attribute?cap_first}IsNull() {

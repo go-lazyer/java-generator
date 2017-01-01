@@ -4,18 +4,24 @@
 		<property name="config" value="config.properties" />
 		<property name="author" value="hanchanghong" />
 	</properties>
-	<data-source >
+	<data-source>
 		<property name="driver" value="com.mysql.jdbc.Driver"></property>
 		<property name="url" value="jdbc:mysql://localhost:3306/whmcs?useUnicode=true&amp;characterEncoding=utf8&amp;allowMultiQueries=true&amp;zeroDateTimeBehavior=convertToNull" />
 		<property name="username" value="root" />
 		<property name="password" value="123" />
 	</data-source>
-	<entity file-package="cn.entity" file-path="src/main/java" />
-	<mapper file-package="cn.mapper" file-path="src/main/java" />
-	<mapper-xml file-package="cn.mapper" file-path="src/main/java" />
-	<service file-package="cn.daoway.api.db.model" file-path="daoway" />
-	<service-impl file-package="cn.daoway.api.db.model" file-path="daoway" />
-	<table table-name="tblorders" id="order">
-		<property name="module-name" value="order" />
+	<entity file-package="com.shadow.entity" file-path="src/main/java" />
+	<mapper file-package="com.shadow.mapper" file-path="src/main/java" />
+	<mapper-xml file-package="mybatis" file-path="src/main/resources" />
+	<service file-package="com.shadow.service" file-path="src/main/java" />
+	<service-impl file-package="com.shadow.service" file-path="src/main/java" />
+	<table table-name="tblproducts">
+		<property name="module-name" value="goods" />
+		<join-table>
+			<property table-name="tblpricing" foreign-key="relid"/>
+		</join-table>
+	</table>
+	<table table-name="tblpricing">
+		<property name="module-name" value="goodsPrice" />
 	</table>
 </lazy-conf>

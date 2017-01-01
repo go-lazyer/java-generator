@@ -28,7 +28,7 @@ public class FieldEntity {
 	 * @author hanchanghong
 	 * @date 2016年5月2日 下午9:28:20
 	 */
-	public List<FieldEntity> queryFieldList(DataSourceEntity dbsEntity, String tableName) {
+	public static  List<FieldEntity> queryFieldList(DataSourceEntity dbsEntity, String tableName) {
 		
 		JdbcUtil jdbcUtil=new JdbcUtil(dbsEntity);
 		String sql="select column_name field,data_type fieldType,column_comment comment,column_key isPrimaryKey, "
@@ -104,8 +104,6 @@ public class FieldEntity {
 	public void setDefaultValue(String defaultValue) {
 		this.defaultValue = defaultValue;
 	}
-	
-	
 	
 	public String getExtra() {
 		return extra;

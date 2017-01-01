@@ -1,17 +1,17 @@
 package ${entityPackage};
 
 /**
- * ${moduleName}实体类
+ * ${table.moduleName}实体类
  * @author ${author}
  * @date ${updateTime}
  */
-public class ${moduleNameCapi}Entity{
-    <#list attrList as key> 
+public class ${table.moduleNameCapi}Entity{
+    <#list table.fields as key> 
 	private ${key.attrType} ${key.attribute}; //${key.comment}
     </#list>
 
 	public void initDefaultValue() {
-	<#list attrList as key> 
+	<#list table.fields as key> 
 		if(${key.attribute}==null){
 			<#if key.attrType = "Integer"> 
 			${key.attribute} = 0; 
@@ -30,7 +30,7 @@ public class ${moduleNameCapi}Entity{
 	</#list>
 	}
     
-    <#list attrList as key> 
+    <#list table.fields as key> 
 	public ${key.attrType} get${key.attribute?cap_first}() {
 		return ${key.attribute};
 	}
