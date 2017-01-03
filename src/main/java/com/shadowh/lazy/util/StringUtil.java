@@ -1,17 +1,13 @@
 package com.shadowh.lazy.util;
 
-import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
-import java.util.ResourceBundle;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
 
 public class StringUtil {
-	private static Locale locale = new Locale("zh", "CN");
-	public static ResourceBundle bundle = ResourceBundle.getBundle("config", locale);
 	public static String BEFORE = "before";
 	public static String AFTER = "after";
 	/**
@@ -188,7 +184,6 @@ public class StringUtil {
 
 	/**
 	 * 驼峰转下划线
-	 * 
 	 * @param param
 	 * @return
 	 * @author hanchanghong
@@ -214,7 +209,6 @@ public class StringUtil {
 
 	/**
 	 * 下划线转驼峰
-	 * 
 	 * @param param
 	 * @return
 	 * @author hanchanghong

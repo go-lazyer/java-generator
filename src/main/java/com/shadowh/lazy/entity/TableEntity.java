@@ -2,6 +2,8 @@ package com.shadowh.lazy.entity;
 
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
+
 import com.shadowh.lazy.util.StringUtil;
 
 /**
@@ -31,7 +33,7 @@ public class TableEntity {
 
 	public void setModuleName(String moduleName) {
 		this.moduleName = moduleName;
-		if(StringUtil.isNotEmpty(moduleName)){
+		if(StringUtils.isNotEmpty(moduleName)){
 			this.moduleNameCapi=StringUtil.firstUpperCase(moduleName);
 		}
 	}

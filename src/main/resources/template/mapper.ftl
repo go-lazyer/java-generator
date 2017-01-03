@@ -107,5 +107,21 @@ public interface ${table.moduleNameCapi}Mapper {
 	 */
 	public List<${table.moduleNameCapi}Entity> query${keys.moduleNameCapi}ByExample(@Param("example") ${table.moduleNameCapi}Example example,@Param("joinExample") ${keys.moduleNameCapi}Example joinExample);
  </#list>
+ 	<#if (table.joinTables?size>1)>
+ 	/**
+	 * 根据id查询全部关联表
+	 * @author ${author}
+	 * @date ${updateTime}
+	 */
+	public ${table.moduleNameCapi}Entity queryAllJoinByPrimaryKey(@Param("primaryKey") String primaryKey<#list table.joinTables as keys>,@Param("${keys.moduleName}Example") ${keys.moduleNameCapi}Example ${keys.moduleName}Example </#list>);
+	
+	/**
+	 * 按条件查询全部关联表
+	 * @author ${author}
+	 * @date ${updateTime}
+	 */
+	public List<${table.moduleNameCapi}Entity> queryAllJoinByExample(@Param("example") ${table.moduleNameCapi}Example example<#list table.joinTables as keys>,@Param("${keys.moduleName}Example") ${keys.moduleNameCapi}Example ${keys.moduleName}Example </#list>);
+ 	
+	</#if>
 </#if>
 }

@@ -1,5 +1,7 @@
 package com.shadowh.lazy.entity;
 
+import org.apache.commons.lang.StringUtils;
+
 import com.shadowh.lazy.util.StringUtil;
 
 /**
@@ -37,7 +39,7 @@ public class DataSourceEntity {
 	public void setUrl(String url) {
 		
 		this.url = url;
-		if(StringUtil.isNotEmpty(url)){
+		if(StringUtils.isNotEmpty(url)){
 			url = url.split("\\?")[0];
 			url=url.split("/")[3];
 			this.dbname=url;

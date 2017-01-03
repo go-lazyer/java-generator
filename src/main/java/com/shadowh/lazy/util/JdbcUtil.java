@@ -5,7 +5,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 import javax.sql.DataSource;
 
@@ -27,11 +26,14 @@ public class JdbcUtil {
 	private static QueryRunner queryRunner;
 	private static String driverName =  "com.mysql.jdbc.Driver"; 
 	static{
-        Properties properties = new Properties();  
-        String url = PropertiesUtil.getStringValue("db.url");  
-        String username = PropertiesUtil.getStringValue("db.user");  
-        String password = PropertiesUtil.getStringValue("db.pass");
-        init(url,username,password);
+        try {
+			String url = PropertiesUtil.getStringValue("db.url");  
+			String username = PropertiesUtil.getStringValue("db.user");  
+			String password = PropertiesUtil.getStringValue("db.pass");
+			init(url,username,password);
+		} catch (Exception e) {
+			logger.error("config.properties file cat not find ");
+		}
 	}
 	
 	public static void updateDataSource(String url,String username,String password) {

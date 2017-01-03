@@ -128,72 +128,72 @@ public class ${table.moduleNameCapi}Example{
 		private ${key.attrType} ${key.attribute}; //${key.comment}
 
 		public Criteria and${key.attribute?cap_first}IsNull() {
-			addCriterion("${table.tableName}.${key.field} is null");
+			addCriterion("${key.field} is null");
 			return (Criteria) this;
 		}
 
 		public Criteria and${key.attribute?cap_first}IsNotNull() {
-			addCriterion("${table.tableName}.${key.field} is not null");
+			addCriterion("${key.field} is not null");
 			return (Criteria) this;
 		}
 
 		public Criteria and${key.attribute?cap_first}EqualTo(String value) {
-			addCriterion("${table.tableName}.${key.field} =", value, "${key.attribute}");
+			addCriterion("${key.field} =", value, "${key.attribute}");
 			return (Criteria) this;
 		}
 
 		public Criteria and${key.attribute?cap_first}NotEqualTo(String value) {
-			addCriterion("${table.tableName}.${key.field} <>", value, "${key.attribute}");
+			addCriterion("${key.field} <>", value, "${key.attribute}");
 			return (Criteria) this;
 		}
 
 		public Criteria and${key.attribute?cap_first}GreaterThan(String value) {
-			addCriterion("${table.tableName}.${key.field} >", value, "${key.attribute}");
+			addCriterion("${key.field} >", value, "${key.attribute}");
 			return (Criteria) this;
 		}
 
 		public Criteria and${key.attribute?cap_first}GreaterThanOrEqualTo(String value) {
-			addCriterion("${table.tableName}.${key.field} >=", value, "${key.attribute}");
+			addCriterion("${key.field} >=", value, "${key.attribute}");
 			return (Criteria) this;
 		}
 
 		public Criteria and${key.attribute?cap_first}LessThan(String value) {
-			addCriterion("${table.tableName}.${key.field} <", value, "${key.attribute}");
+			addCriterion("${key.field} <", value, "${key.attribute}");
 			return (Criteria) this;
 		}
 
 		public Criteria and${key.attribute?cap_first}LessThanOrEqualTo(String value) {
-			addCriterion("${table.tableName}.${key.field} <=", value, "${key.attribute}");
+			addCriterion("${key.field} <=", value, "${key.attribute}");
 			return (Criteria) this;
 		}
 
 		public Criteria and${key.attribute?cap_first}Like(String value) {
-			addCriterion("${table.tableName}.${key.field} like", value, "${key.attribute}");
+			addCriterion("${key.field} like", value, "${key.attribute}");
 			return (Criteria) this;
 		}
 
 		public Criteria and${key.attribute?cap_first}NotLike(String value) {
-			addCriterion("${table.tableName}.${key.field} not like", value, "${key.attribute}");
+			addCriterion("${key.field} not like", value, "${key.attribute}");
 			return (Criteria) this;
 		}
 
 		public Criteria and${key.attribute?cap_first}In(List<String> values) {
-			addCriterion("${table.tableName}.${key.field} in", values, "${key.attribute}");
+			addCriterion("${key.field} in", values, "${key.attribute}");
 			return (Criteria) this;
 		}
 
 		public Criteria and${key.attribute?cap_first}NotIn(List<String> values) {
-			addCriterion("${table.tableName}.${key.field} not in", values, "${key.attribute}");
+			addCriterion("${key.field} not in", values, "${key.attribute}");
 			return (Criteria) this;
 		}
 
 		public Criteria and${key.attribute?cap_first}Between(String firstValue, String secondValue) {
-			addCriterion("${table.tableName}.${key.field} between", firstValue, secondValue, "${key.attribute}");
+			addCriterion("${key.field} between", firstValue, secondValue, "${key.attribute}");
 			return (Criteria) this;
 		}
 
 		public Criteria and${key.attribute?cap_first}NotBetween(String firstValue, String secondValue) {
-			addCriterion("${table.tableName}.${key.field} not between", firstValue, secondValue, "${key.attribute}");
+			addCriterion("${key.field} not between", firstValue, secondValue, "${key.attribute}");
 			return (Criteria) this;
 		}
 	    </#list>

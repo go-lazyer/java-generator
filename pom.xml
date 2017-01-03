@@ -151,6 +151,12 @@
 			<artifactId>dom4j</artifactId>
 			<version>1.6.1</version>
 		</dependency>
+		<dependency>
+			<groupId>com.shekhargulati</groupId>
+			<artifactId>strman</artifactId>
+			<version>0.2.0</version>
+			<type>jar</type>
+		</dependency>
 	</dependencies>
 	<build>
 		<finalName>shadowh-lazy</finalName>

@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.collections.MapUtils;
+import org.apache.commons.lang.StringUtils;
 import org.dom4j.Attribute;
 import org.dom4j.Document;
 import org.dom4j.Element;
@@ -86,7 +87,7 @@ public class GenerateCode {
 
 	public static void parseXml(String configXml) {
 		try {
-			if(StringUtil.isEmpty(configXml)){
+			if(StringUtils.isEmpty(configXml)){
 				configXml="lazy-config.xml";
 			}
 			InputStream inputStream = GenerateCode.class.getResourceAsStream("/" + configXml);
