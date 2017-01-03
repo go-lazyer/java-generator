@@ -4,6 +4,11 @@ import java.util.List;
 
 import ${entityPackage}.${table.moduleNameCapi}Entity;
 import ${entityPackage}.${table.moduleNameCapi}Example;
+<#if table.joinTables??>
+ <#list table.joinTables as keys>
+import ${entityPackage}.${keys.moduleNameCapi}Example;
+ </#list>
+</#if>
 import org.apache.ibatis.annotations.Param;
 
 public interface ${table.moduleNameCapi}Mapper {
@@ -85,5 +90,22 @@ public interface ${table.moduleNameCapi}Mapper {
 	 * @date ${updateTime}
 	 */
 	public List<${table.moduleNameCapi}Entity> queryByExample(${table.moduleNameCapi}Example example);
+<#if table.joinTables??>
+ <#list table.joinTables as keys>
+ 
+	/**
+	 * 根据id查询${table.moduleName}
+	 * @author ${author}
+	 * @date ${updateTime}
+	 */
+	public ${table.moduleNameCapi}Entity query${keys.moduleNameCapi}ByPrimaryKey(@Param("primaryKey") String primaryKey,@Param("joinExample") ${keys.moduleNameCapi}Example joinExample);
 	
+	/**
+	 * 按条件查询${table.moduleName}
+	 * @author ${author}
+	 * @date ${updateTime}
+	 */
+	public List<${table.moduleNameCapi}Entity> query${keys.moduleNameCapi}ByExample(@Param("example") ${table.moduleNameCapi}Example example,@Param("joinExample") ${keys.moduleNameCapi}Example joinExample);
+ </#list>
+</#if>
 }

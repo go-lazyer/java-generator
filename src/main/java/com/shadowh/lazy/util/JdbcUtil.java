@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import javax.sql.DataSource;
 
@@ -18,20 +19,27 @@ import org.apache.commons.dbutils.handlers.ScalarHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.shadowh.lazy.entity.DataSourceEntity;
-
+@SuppressWarnings("all")
 public class JdbcUtil {
 	private static DataSource dataSource;
 	private static Logger logger = LoggerFactory.getLogger(JdbcUtil.class);
 	public static ThreadLocal<Connection> threadLocal = new ThreadLocal<Connection>();
-	private QueryRunner queryRunner;
+	private static QueryRunner queryRunner;
+	private static String driverName =  "com.mysql.jdbc.Driver"; 
+	static{
+        Properties properties = new Properties();  
+        String url = PropertiesUtil.getStringValue("db.url");  
+        String username = PropertiesUtil.getStringValue("db.user");  
+        String password = PropertiesUtil.getStringValue("db.pass");
+        init(url,username,password);
+	}
 	
-	public JdbcUtil(DataSourceEntity dataSourceEntity) {
+	public static void updateDataSource(String url,String username,String password) {
+		init(url,username,password);
+	}
+	
+	private static void init(String url,String username,String password){
         try {  
-            String url =dataSourceEntity.getUrl();
-            String username = dataSourceEntity.getUsername();
-            String password =  dataSourceEntity.getPassword();
-            String driverName =  "com.mysql.jdbc.Driver"; 
             BasicDataSource basicDataSource = new BasicDataSource();  
             basicDataSource.setUrl(url);  
             basicDataSource.setUsername(username);  
@@ -41,13 +49,13 @@ public class JdbcUtil {
             basicDataSource.setMaxActive(10);  
             basicDataSource.setMaxIdle(20);  //最大闲置个数  
             basicDataSource.setMaxWait(1000);  //最大等待时间  
-            System.out.println(basicDataSource);  
-            dataSource=basicDataSource;  
+            dataSource=basicDataSource;
+            queryRunner = new QueryRunner(dataSource);
+            logger.error("Connection database success!");
         } catch (Exception e) {  
-            e.printStackTrace();  
-        }  
-}
-	
+            logger.error("Connection database error!");
+        } 
+	}
 	// 获取共享变量
 	public static ThreadLocal<Connection> getThreadLocal() {
 		return threadLocal;
@@ -162,8 +170,8 @@ public class JdbcUtil {
 		}
 	}
 
-	public void setDataSource(BasicDataSource dataSource) {
-		this.dataSource = dataSource;
+	public static void setDataSource(BasicDataSource dataSource) {
+		dataSource = dataSource;
 	}
 
 	/**
@@ -184,7 +192,6 @@ public class JdbcUtil {
 	 * @date 2014年10月11日 下午4:16:54
 	 */
 	public static int update(String sql,Object[] params) throws SQLException{
-		QueryRunner queryRunner = new QueryRunner(dataSource);
 		if(params==null){
 			return queryRunner.update(sql);
 		}else{
@@ -197,8 +204,7 @@ public class JdbcUtil {
 	 * @throws SQLException 
 	 * @date 2014年10月11日 下午4:16:54
 	 */
-	public int[] batch(String sql, Object[][] params) throws SQLException {
-		QueryRunner queryRunner = new QueryRunner(dataSource);
+	public static int[] batch(String sql, Object[][] params) throws SQLException {
 		return queryRunner.batch(sql, params);
 	}
 	
@@ -208,8 +214,7 @@ public class JdbcUtil {
 	 * @author hanchanghong
 	 * @date 2014年10月11日 下午4:17:38
 	 */
-	public int update(Connection conn, String sql) throws Exception {
-		QueryRunner queryRunner = new QueryRunner();
+	public static int update(Connection conn, String sql) throws Exception {
 		return queryRunner.update(conn, sql);
 	}
 
@@ -221,10 +226,8 @@ public class JdbcUtil {
 	 * @throws SQLException 
 	 * @date 2014年10月11日 下午4:25:46
 	 */
-	@SuppressWarnings("unchecked")
-	public long queryCount(String sql) throws SQLException {
+	public static long queryCount(String sql) throws SQLException {
 		logger.info(sql);
-		QueryRunner queryRunner = new QueryRunner(dataSource);
 		long count = (long)queryRunner.query(sql, new ScalarHandler(1));
 		return count;
 	}
@@ -244,7 +247,6 @@ public class JdbcUtil {
 	}
 	public static List<Map<String, Object>> query(String sql, Object[] params) throws SQLException {
 		logger.info(sql);
-		QueryRunner queryRunner = new QueryRunner(dataSource);
 		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 		if (params == null) {
 			list = (List<Map<String, Object>>) queryRunner.query(sql,new MapListHandler());
@@ -262,15 +264,14 @@ public class JdbcUtil {
 	 * @return
 	 * @throws SQLException
 	 */
-	public <T> List<T> query(Class<T> entityClass,String sql) throws SQLException {
+	public static <T> List<T> query(Class<T> entityClass, String sql) throws SQLException {
 		return query(entityClass, sql, null);
 	}
-	public <T> List<T> query(Class<T> entityClass, String sql, Object param) throws SQLException {
+	public static <T> List<T> query(Class<T> entityClass, String sql, Object param) throws SQLException {
 		return query(entityClass, sql, new Object[] { param });
 	}
-	public <T> List<T> query(Class<T> entityClass, String sql, Object[] params) throws SQLException {
+	public static <T> List<T> query(Class<T> entityClass, String sql, Object[] params) throws SQLException {
 		logger.info(sql);
-		QueryRunner queryRunner = new QueryRunner(dataSource);
 		List<T> list = new ArrayList<T>();
 		if (params == null) {
 			list = (List<T>) queryRunner.query(sql, new BeanListHandler(entityClass));
@@ -293,7 +294,6 @@ public class JdbcUtil {
 		return queryFirst(sql, new Object[] { param });
 	}
 	public static  Map<String, Object> queryFirst(String sql, Object[] params) throws SQLException {
-		QueryRunner queryRunner = new QueryRunner(dataSource);
 		Map<String, Object> map = null;
 		if (params == null) {
 			map = (Map<String, Object>) queryRunner.query(sql,new MapHandler());
@@ -321,7 +321,6 @@ public class JdbcUtil {
 	}
 
 	public static <T> T queryFirst(Class<T> entityClass, String sql, Object[] params) throws SQLException {
-		QueryRunner queryRunner = new QueryRunner(dataSource);
 		Object object = null;
 		if (params == null) {
 			logger.info(sql);
@@ -347,7 +346,6 @@ public class JdbcUtil {
 		return findBy(sql, columnName, new Object[] { param });
 	}
 	public static Object findBy(String sql, String columnName, Object[] params) {
-		QueryRunner queryRunner = new QueryRunner(dataSource);
 		Object object = null;
 		try {
 			if (params == null) {
@@ -369,21 +367,19 @@ public class JdbcUtil {
 	 * @param columnIndex  列数
 	 * @return
 	 */
-	public Object findBy(String sql, int columnIndex) {
+	public static Object findBy(String sql, int columnIndex) {
 		return findBy(sql, columnIndex, null);
 	}
-	public Object findBy(String sql, int columnIndex, Object param) {
+	public static Object findBy(String sql, int columnIndex, Object param) {
 		return findBy(sql, columnIndex, new Object[] { param });
 	}
-	public Object findBy(String sql, int columnIndex, Object[] params) {
-		QueryRunner queryRunner = new QueryRunner(dataSource);
+	public static Object findBy(String sql, int columnIndex, Object[] params) {
 		Object object = null;
 		try {
 			if (params == null) {
 				object = queryRunner.query(sql, new ScalarHandler(columnIndex));
 			} else {
-				object = queryRunner.query(sql, new ScalarHandler(columnIndex),
-						params);
+				object = queryRunner.query(sql, new ScalarHandler(columnIndex),params);
 			}
 		} catch (SQLException e) {
 		}

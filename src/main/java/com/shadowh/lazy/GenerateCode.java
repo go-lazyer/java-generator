@@ -1,18 +1,12 @@
 package com.shadowh.lazy;
 
-import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.IdentityHashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.collections.MapUtils;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.dom4j.Attribute;
 import org.dom4j.Document;
 import org.dom4j.Element;
@@ -25,8 +19,9 @@ import com.shadowh.lazy.entity.GlobalConfigEntity;
 import com.shadowh.lazy.entity.JoinTableEntity;
 import com.shadowh.lazy.entity.TableEntity;
 import com.shadowh.lazy.util.FreeMarkerUtil;
+import com.shadowh.lazy.util.JdbcUtil;
+import com.shadowh.lazy.util.JsonUtil;
 import com.shadowh.lazy.util.StringUtil;
-import com.shadowh.util.JsonUtil;
 
 public class GenerateCode {
 	private static DataSourceEntity dataSource;
@@ -42,6 +37,7 @@ public class GenerateCode {
 	 */
 	public void gencode(String configXml){
 		parseXml(configXml);
+		JdbcUtil.updateDataSource(dataSource.getUrl(), dataSource.getUsername(), dataSource.getPassword());
 		globalConfigEntity.setUpdateTime(DateTime.now().toString("yyyy-MM-dd HH:mm:ss"));
 
 		/** 模板引擎所需要的数据Map */
@@ -56,15 +52,27 @@ public class GenerateCode {
 //			viewMap.put("tableName", tableEntity.getTableName());
 //			viewMap.put("moduleName", tableEntity.getModuleName());
 //			viewMap.put("moduleNameCapi", tableEntity.getModuleNameCapi());
-			List<FieldEntity> fieldList = FieldEntity.queryFieldList(dataSource, tableEntity.getTableName());
+			List<FieldEntity> fieldList = FieldEntity.queryFieldList(dataSource.getDbname(), tableEntity.getTableName());
+			for (FieldEntity fieldEntity : fieldList) {
+				if("1".equals(fieldEntity.getIsPrimaryKey())){
+					viewMap.put("primaryKey", fieldEntity);
+					break;
+				}
+			}
 //			viewMap.put("attrList", fieldList);
 			tableEntity.setFields(fieldList);
 			
 			List<JoinTableEntity> manyTableList = tableEntity.getJoinTables();
 			if(manyTableList!=null&&!manyTableList.isEmpty()){
 				for (JoinTableEntity manyTableEntity : manyTableList) {
-					List<FieldEntity> manyTablefield = FieldEntity.queryFieldList(dataSource, manyTableEntity.getTableName());
-					manyTableEntity.setFieldList(manyTablefield);
+					List<FieldEntity> manyTablefield = FieldEntity.queryFieldList(dataSource.getDbname(), manyTableEntity.getTableName());
+					for (TableEntity t : tableList) {
+						if(manyTableEntity.getTableName().equals(t.getTableName())){
+							manyTableEntity.setModuleName(t.getModuleName());
+							manyTableEntity.setModuleNameCapi(t.getModuleNameCapi());
+						}
+					}
+					manyTableEntity.setFields(manyTablefield);
 				}
 			}
 			viewMap.put("table", tableEntity);
@@ -139,9 +147,6 @@ public class GenerateCode {
 					List<Attribute> tableAttributes = tableElement.attributes();
 					for (Attribute attribute : tableAttributes) {
 						switch (attribute.getName()) {
-						case "id":
-							tableEntity.setId(attribute.getValue());
-							break;
 						case "table-name":
 							tableEntity.setTableName(attribute.getValue());
 							break;
@@ -158,9 +163,6 @@ public class GenerateCode {
 						Attribute nameAttribute = element.attribute("name");
 						Attribute valueAttribute = element.attribute("value");
 						switch (nameAttribute.getValue()) {
-						case "id":
-							tableEntity.setId(valueAttribute.getValue());
-							break;
 						case "table-name":
 							tableEntity.setTableName(valueAttribute.getValue());
 							break;
@@ -185,6 +187,9 @@ public class GenerateCode {
 									break;
 								case "foreign-key":
 									manyTableEntity.setForeignKey(attribute.getValue());
+									break;
+								case "type":
+									manyTableEntity.setType(attribute.getValue());
 									break;
 								default:
 									break;

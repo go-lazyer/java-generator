@@ -2,8 +2,6 @@ package com.shadowh.lazy;
 
 import org.junit.Test;
 
-import com.shadowh.util.StringUtil;
-
 public class GenerateStart {
 	
 	public static void main(String[] args) {

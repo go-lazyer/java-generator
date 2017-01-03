@@ -18,10 +18,14 @@
 	<table table-name="tblproducts">
 		<property name="module-name" value="goods" />
 		<join-table>
-			<property table-name="tblpricing" foreign-key="relid"/>
+			<property table-name="tblpricing" foreign-key="relid" type="one-to-many"/>
+			<property table-name="tbladmins" foreign-key="roleid" type="one-to-one"/>
 		</join-table>
 	</table>
 	<table table-name="tblpricing">
 		<property name="module-name" value="goodsPrice" />
+	</table>
+	<table table-name="tbladmins">
+		<property name="module-name" value="admin" />
 	</table>
 </lazy-conf>

@@ -10,20 +10,12 @@ import com.shadowh.lazy.util.StringUtil;
  * @date 2016年9月18日 上午10:05:13
  */
 public class TableEntity {
-	private String id;
 	private String tableName;
 	private String moduleName;
 	private String moduleNameCapi;
 	private List<FieldEntity> fields;
 	private List<JoinTableEntity> joinTables;
 	
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
-	}
 
 	public String getTableName() {
 		return tableName;
@@ -67,6 +59,11 @@ public class TableEntity {
 
 	public void setJoinTables(List<JoinTableEntity> joinTables) {
 		this.joinTables = joinTables;
+	}
+
+	@Override
+	public String toString() {
+		return "TableEntity [tableName=" + tableName + ", moduleName=" + moduleName + ", moduleNameCapi=" + moduleNameCapi + ", fields=" + fields + ", joinTables=" + joinTables + "]";
 	}
 
 }

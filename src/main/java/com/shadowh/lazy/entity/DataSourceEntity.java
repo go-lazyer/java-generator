@@ -1,6 +1,6 @@
 package com.shadowh.lazy.entity;
 
-import com.shadowh.util.StringUtil;
+import com.shadowh.lazy.util.StringUtil;
 
 /**
  * 数据源 

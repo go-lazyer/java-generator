@@ -28,16 +28,15 @@ public class FieldEntity {
 	 * @author hanchanghong
 	 * @date 2016年5月2日 下午9:28:20
 	 */
-	public static  List<FieldEntity> queryFieldList(DataSourceEntity dbsEntity, String tableName) {
+	public static  List<FieldEntity> queryFieldList(String dbname, String tableName) {
 		
-		JdbcUtil jdbcUtil=new JdbcUtil(dbsEntity);
 		String sql="select column_name field,data_type fieldType,column_comment comment,column_key isPrimaryKey, "
 				+ " is_nullable isNullable  ,column_default defaultValue,extra"
 				+ " from information_schema.COLUMNS "
-				+ " where table_name = '"+tableName+"' and table_schema = '"+dbsEntity.getDbname()+"'";
+				+ " where table_name = '"+tableName+"' and table_schema = '"+dbname+"'";
 		List<FieldEntity> fieldList = null;
 		try {
-			fieldList = jdbcUtil.query(FieldEntity.class,sql);
+			fieldList = JdbcUtil.query(FieldEntity.class,sql);
 			for (FieldEntity field : fieldList) {
 				field.setAttribute( StringUtil.underlineToCamel(field.getField()));
 				if("PRI".equals(field.getIsPrimaryKey())){
