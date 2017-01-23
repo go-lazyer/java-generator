@@ -9,7 +9,7 @@ import com.shadowh.lazy.util.StringUtil;
  * @author hanchanghong
  * @date 2016年9月18日 上午10:05:13
  */
-public class JoinTableEntity {
+public class JoinTableEntity extends TableEntity{
 	private String tableName;//一对多的表
 	private String foreignKey;//外键
 	private String type="one-to-many";//对应关系"one-to-many" one-to-one

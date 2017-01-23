@@ -15,17 +15,50 @@
 	<mapper-xml file-package="mybatis" file-path="src/main/resources" />
 	<service file-package="com.shadow.service" file-path="src/main/java" />
 	<service-impl file-package="com.shadow.service" file-path="src/main/java" />
+	
+	<!--表的相关配置，每个表一个单独的标签
+		module-name：模块名称，生成的实体名 ***Entity
+	-->
 	<table table-name="tblproducts">
 		<property name="module-name" value="goods" />
+		<!-- 多表关联 ，
+			foreign-key：管理表中的外键  
+			type:关联关系  一对多，或者多对多
+			注意：join-table的表必须出现在配置文件中的table 中
+		-->
 		<join-table>
 			<property table-name="tblpricing" foreign-key="relid" type="one-to-many"/>
 			<property table-name="tbladmins" foreign-key="roleid" type="one-to-one"/>
 		</join-table>
+		
+		<!--扩展字段 只在实体中有  -->
+		<extend-fields>
+			<property field-name="start" field-type="int"/>
+		</extend-fields>
+		
+		<!-- 忽略的列  主键和外键不能忽略-->
+		<ignore-columns>
+			<property column-name="type"/>
+		</ignore-columns>
+		
+		<!-- 保留的列    必须包含主键和外键
+		<only-columns>
+			<property column-name="id"/>
+			<property column-name="type"/>
+		</only-columns>-->
+		
+		<!-- 重写的列-->
+		<override-columns>
+			<property column-name="name" field-type="Integer" field-name="newName"/>
+		</override-columns>
 	</table>
 	<table table-name="tblpricing">
 		<property name="module-name" value="goodsPrice" />
 	</table>
 	<table table-name="tbladmins">
 		<property name="module-name" value="admin" />
+	</table>
+	<table table-name="test">
+		<property name="module-name" value="test" />
 	</table>
 </lazy-conf>

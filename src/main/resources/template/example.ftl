@@ -9,28 +9,34 @@ import java.util.LinkedHashMap;
  * @date ${updateTime}
  */
 public class ${table.moduleNameCapi}Example{
-    private String columnStr = "*";//需要查询的字段默认为所有
-    
+	
+    private String selectColumns = "*";//自定义查询
     private LinkedHashMap <String,String> orderBy;//排序字段
     
     Integer start;
-    
     Integer size;
 	
+    <#list table.fields as key> 
+    public static String ${key.field} = "${key.column}";
+    </#list>
+    
+    public static String ORDER_ASC="asc";
+    public static String ORDER_DESC="desc";
+    
 	protected boolean distinct;
 	protected List<Criteria> criteriaList;
+	
 	public ${table.moduleNameCapi}Example() {
 		criteriaList = new ArrayList<Criteria>();
 	}
-	
-	public String getColumnStr() {
-		return columnStr;
-	}
-	public void setColumnStr(String columnStr) {
-		this.columnStr = columnStr;
-	}
+
 	public LinkedHashMap <String,String> getOrderBy() {
 		return orderBy;
+	}
+	public void setOrderBy(String field,String type) {
+		LinkedHashMap<String, String> orderByMap= new LinkedHashMap<String, String>();
+		orderByMap.put(field, type);
+		setOrderBy(orderByMap);
 	}
 	public void setOrderBy(LinkedHashMap <String,String> orderBy) {
 		this.orderBy = orderBy;
@@ -47,10 +53,14 @@ public class ${table.moduleNameCapi}Example{
 	public void setSize(Integer size) {
 		this.size = size;
 	}
+
+	public String getSelectColumns() {
+		return selectColumns;
+	}
 	
-	
-	
-	
+	public void setSelectColumns(String selectColumns) {
+		this.selectColumns = selectColumns;
+	}
 	
 	public void setDistinct(boolean distinct) {
 		this.distinct = distinct;
@@ -108,106 +118,142 @@ public class ${table.moduleNameCapi}Example{
 			if (condition == null) {
 				throw new RuntimeException("Value for condition cannot be null");
 			}
-			criteria.add(new Criterion(condition));
+			criteria.add(new Criterion(condition,Criterion.noValue));
 		}
 
-		protected void addCriterion(String condition, Object value, String property) {
+		protected void addCriterion(String condition,String valueType, Object value, String property) {
 			if (value == null) {
 				throw new RuntimeException("Value for " + property + " cannot be null");
 			}
-			criteria.add(new Criterion(condition, value));
+			criteria.add(new Criterion(condition,valueType, value));
 		}
 
-		protected void addCriterion(String condition, Object firstValue, Object secondValue, String property) {
+		protected void addCriterion(String condition,String valueType, Object firstValue, Object secondValue, String property) {
 			if (firstValue == null || secondValue == null) {
 				throw new RuntimeException("Between values for " + property + " cannot be null");
 			}
-			criteria.add(new Criterion(condition, firstValue, secondValue));
+			criteria.add(new Criterion(condition,valueType, firstValue, secondValue));
 		}
 	  <#list table.fields as key> 
-		private ${key.attrType} ${key.attribute}; //${key.comment}
+		private ${key.fieldType} ${key.field}; //${key.comment}
 
-		public Criteria and${key.attribute?cap_first}IsNull() {
-			addCriterion("${key.field} is null");
+		public Criteria and${key.field?cap_first}IsNull() {
+			addCriterion("${key.column} is null");
 			return (Criteria) this;
 		}
 
-		public Criteria and${key.attribute?cap_first}IsNotNull() {
-			addCriterion("${key.field} is not null");
+		public Criteria and${key.field?cap_first}IsNotNull() {
+			addCriterion("${key.column} is not null");
 			return (Criteria) this;
 		}
 
-		public Criteria and${key.attribute?cap_first}EqualTo(String value) {
-			addCriterion("${key.field} =", value, "${key.attribute}");
+		public Criteria and${key.field?cap_first}EqualTo(String value) {
+			addCriterion("${key.column} =",Criterion.singleValue, value, "${key.field}");
+			return (Criteria) this;
+		}
+		
+		public Criteria and${key.field?cap_first}NotEqualTo(String value) {
+			addCriterion("${key.column} <>",Criterion.singleValue, value, "${key.field}");
 			return (Criteria) this;
 		}
 
-		public Criteria and${key.attribute?cap_first}NotEqualTo(String value) {
-			addCriterion("${key.field} <>", value, "${key.attribute}");
+		public Criteria and${key.field?cap_first}GreaterThan(String value) {
+			addCriterion("${key.column} >",Criterion.singleValue, value, "${key.field}");
 			return (Criteria) this;
 		}
 
-		public Criteria and${key.attribute?cap_first}GreaterThan(String value) {
-			addCriterion("${key.field} >", value, "${key.attribute}");
+		public Criteria and${key.field?cap_first}GreaterThanOrEqualTo(String value) {
+			addCriterion("${key.column} >=",Criterion.singleValue, value, "${key.field}");
 			return (Criteria) this;
 		}
 
-		public Criteria and${key.attribute?cap_first}GreaterThanOrEqualTo(String value) {
-			addCriterion("${key.field} >=", value, "${key.attribute}");
+		public Criteria and${key.field?cap_first}LessThan(String value) {
+			addCriterion("${key.column} <",Criterion.singleValue, value, "${key.field}");
 			return (Criteria) this;
 		}
 
-		public Criteria and${key.attribute?cap_first}LessThan(String value) {
-			addCriterion("${key.field} <", value, "${key.attribute}");
+		public Criteria and${key.field?cap_first}LessThanOrEqualTo(String value) {
+			addCriterion("${key.column} <=",Criterion.singleValue, value, "${key.field}");
+			return (Criteria) this;
+		}
+		
+		
+		public Criteria and${key.field?cap_first}EqualToField(String fieldName) {
+			addCriterion("${key.column} =",Criterion.fieldValue, fieldName, "${key.field}");
+			return (Criteria) this;
+		}
+		
+		public Criteria and${key.field?cap_first}NotEqualToField(String fieldName) {
+			addCriterion("${key.column} <>",Criterion.fieldValue, fieldName, "${key.field}");
 			return (Criteria) this;
 		}
 
-		public Criteria and${key.attribute?cap_first}LessThanOrEqualTo(String value) {
-			addCriterion("${key.field} <=", value, "${key.attribute}");
+		public Criteria and${key.field?cap_first}GreaterThanField(String fieldName) {
+			addCriterion("${key.column} >",Criterion.fieldValue, fieldName, "${key.field}");
 			return (Criteria) this;
 		}
 
-		public Criteria and${key.attribute?cap_first}Like(String value) {
-			addCriterion("${key.field} like", value, "${key.attribute}");
+		public Criteria and${key.field?cap_first}GreaterThanOrEqualToField(String fieldName) {
+			addCriterion("${key.column} >=",Criterion.fieldValue, fieldName, "${key.field}");
 			return (Criteria) this;
 		}
 
-		public Criteria and${key.attribute?cap_first}NotLike(String value) {
-			addCriterion("${key.field} not like", value, "${key.attribute}");
+		public Criteria and${key.field?cap_first}LessThanField(String fieldName) {
+			addCriterion("${key.column} <",Criterion.fieldValue, fieldName, "${key.field}");
 			return (Criteria) this;
 		}
 
-		public Criteria and${key.attribute?cap_first}In(List<String> values) {
-			addCriterion("${key.field} in", values, "${key.attribute}");
+		public Criteria and${key.field?cap_first}LessThanOrEqualToField(String fieldName) {
+			addCriterion("${key.column} <=",Criterion.fieldValue, fieldName, "${key.field}");
+			return (Criteria) this;
+		}
+		
+
+		public Criteria and${key.field?cap_first}Like(String value) {
+			addCriterion("${key.column} like",Criterion.singleValue, value, "${key.field}");
 			return (Criteria) this;
 		}
 
-		public Criteria and${key.attribute?cap_first}NotIn(List<String> values) {
-			addCriterion("${key.field} not in", values, "${key.attribute}");
+		public Criteria and${key.field?cap_first}NotLike(String value) {
+			addCriterion("${key.column} not like",Criterion.singleValue, value, "${key.field}");
 			return (Criteria) this;
 		}
 
-		public Criteria and${key.attribute?cap_first}Between(String firstValue, String secondValue) {
-			addCriterion("${key.field} between", firstValue, secondValue, "${key.attribute}");
+		public Criteria and${key.field?cap_first}In(List<String> values) {
+			addCriterion("${key.column} in",Criterion.listValue, values, "${key.field}");
 			return (Criteria) this;
 		}
 
-		public Criteria and${key.attribute?cap_first}NotBetween(String firstValue, String secondValue) {
-			addCriterion("${key.field} not between", firstValue, secondValue, "${key.attribute}");
+		public Criteria and${key.field?cap_first}NotIn(List<String> values) {
+			addCriterion("${key.column} not in",Criterion.listValue, values, "${key.field}");
+			return (Criteria) this;
+		}
+
+		public Criteria and${key.field?cap_first}Between(String firstValue, String secondValue) {
+			addCriterion("${key.column} between", Criterion.betweenValue,firstValue, secondValue, "${key.field}");
+			return (Criteria) this;
+		}
+
+		public Criteria and${key.field?cap_first}NotBetween(String firstValue, String secondValue) {
+			addCriterion("${key.column} not between",Criterion.betweenValue, firstValue, secondValue, "${key.field}");
 			return (Criteria) this;
 		}
 	    </#list>
 	}
 
 	public static class Criterion {
+		public static String  noValue ="noValue";
+		public static String  singleValue ="singleValue";
+		public static String  fieldValue ="fieldValue";
+		public static String  betweenValue ="betweenValue";
+		public static String  listValue ="listValue";
+		
+		
 		private String condition;
 		private Object value;
 		private Object secondValue;
-		private boolean noValue;
-		private boolean singleValue;
-		private boolean betweenValue;
-		private boolean listValue;
-		private String typeHandler;
+		private String valueType;
+
 
 		public String getCondition() {
 			return condition;
@@ -220,63 +266,30 @@ public class ${table.moduleNameCapi}Example{
 		public Object getSecondValue() {
 			return secondValue;
 		}
-
-		public boolean isNoValue() {
-			return noValue;
+		
+		public String getValueType() {
+			return valueType;
 		}
-
-		public boolean isSingleValue() {
-			return singleValue;
-		}
-
-		public boolean isBetweenValue() {
-			return betweenValue;
-		}
-
-		public boolean isListValue() {
-			return listValue;
-		}
-
-		public String getTypeHandler() {
-			return typeHandler;
-		}
-
-		protected Criterion(String condition) {
+		protected Criterion(String condition,String valueType) {
 			super();
 			this.condition = condition;
-			this.typeHandler = null;
-			this.noValue = true;
+			this.valueType = valueType;
 		}
-
-		protected Criterion(String condition, Object value, String typeHandler) {
+		protected Criterion(String condition,String valueType,Object value) {
 			super();
 			this.condition = condition;
+			this.valueType = valueType;
 			this.value = value;
-			this.typeHandler = typeHandler;
-			if (value instanceof List<?>) {
-				this.listValue = true;
-			} else {
-				this.singleValue = true;
-			}
 		}
-
-		protected Criterion(String condition, Object value) {
-			this(condition, value, null);
-		}
-
-		protected Criterion(String condition, Object value, Object secondValue, String typeHandler) {
+		protected Criterion(String condition,String valueType,Object value,Object secondValue) {
 			super();
 			this.condition = condition;
+			this.valueType = valueType;
 			this.value = value;
 			this.secondValue = secondValue;
-			this.typeHandler = typeHandler;
-			this.betweenValue = true;
-		}
-
-		protected Criterion(String condition, Object value, Object secondValue) {
-			this(condition, value, secondValue, null);
 		}
 	}
+
 
 }
 

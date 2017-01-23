@@ -4,9 +4,9 @@
 	<resultMap type="${table.moduleName}Entity" id="${table.moduleName}Map" autoMapping="true">
 <#list table.fields as key> 
 	<#if key.isPrimaryKey = "1"> 
-		<id column="${key.field}" property="${key.attribute}" />
+		<id column="${key.column}" property="${key.field}" />
 	<#else> 
-		<result column="${key.field}" property="${key.attribute}" />
+		<result column="${key.column}" property="${key.field}" />
 	</#if>
 </#list>
 	</resultMap>
@@ -18,9 +18,9 @@
 		<association property="${keys.moduleName}Entity" ofType="${keys.moduleName}Entity" column="${keys.foreignKey}">
   <#list keys.fields as key> 
 	<#if key.isPrimaryKey = "1"> 
-		<id column="${key.field}_${keys_index}" property="${key.attribute}" />
+		<id column="${key.column}_${keys_index}" property="${key.field}" />
 	<#else> 
-		<result column="${key.field}_${keys_index}" property="${key.attribute}" />
+		<result column="${key.column}_${keys_index}" property="${key.field}" />
 	</#if>
   </#list>
 		</association>
@@ -30,9 +30,9 @@
 		<collection property="${keys.moduleName}List" ofType="${keys.moduleName}Entity" column="${keys.foreignKey}">
   <#list keys.fields as key> 
 	<#if key.isPrimaryKey = "1"> 
-		<id column="${key.field}_${keys_index}" property="${key.attribute}" />
+		<id column="${key.column}_${keys_index}" property="${key.field}" />
 	<#else> 
-		<result column="${key.field}_${keys_index}" property="${key.attribute}" />
+		<result column="${key.column}_${keys_index}" property="${key.field}" />
 	</#if>
   </#list>
 		</collection>
@@ -46,9 +46,9 @@
 		<association property="${keys.moduleName}Entity" ofType="${keys.moduleName}Entity" column="${keys.foreignKey}">
   		<#list keys.fields as key> 
 		<#if key.isPrimaryKey = "1"> 
-		<id column="${key.field}_${keys_index}" property="${key.attribute}" />
+		<id column="${key.column}_${keys_index}" property="${key.field}" />
 		<#else> 
-		<result column="${key.field}_${keys_index}" property="${key.attribute}" />
+		<result column="${key.column}_${keys_index}" property="${key.field}" />
 		</#if>
   		</#list>
 		</association>
@@ -56,9 +56,9 @@
 		<collection property="${keys.moduleName}List" ofType="${keys.moduleName}Entity" column="${keys.foreignKey}">
   		<#list keys.fields as key> 
 		<#if key.isPrimaryKey = "1"> 
-		<id column="${key.field}_${keys_index}" property="${key.attribute}" />
+		<id column="${key.column}_${keys_index}" property="${key.field}" />
 		<#else> 
-		<result column="${key.field}_${keys_index}" property="${key.attribute}" />
+		<result column="${key.column}_${keys_index}" property="${key.field}" />
 		</#if>
   		</#list>
 		</collection>
@@ -68,35 +68,6 @@
    	</#if>
 </#if>
 
-	<sql id="where_sql">
-	    <where>
-	      <foreach collection="criteriaList" item="criteria" separator="or">
-	        <if test="criteria.valid">
-	          <trim prefix="(" prefixOverrides="and" suffix=")">
-	            <foreach collection="criteria.criteria" item="criterion">
-	              <choose>
-	                <when test="criterion.noValue">
-	                  and t.${r"${criterion.condition}"}
-	                </when>
-	                <when test="criterion.singleValue">
-	                  and t.${r"${criterion.condition}"} ${r"#{criterion.value}"}
-	                </when>
-	                <when test="criterion.betweenValue">
-	                  and t.${r"${criterion.condition}"} ${r"#{criterion.value}"} and ${r"#{criterion.secondValue}"}
-	                </when>
-	                <when test="criterion.listValue">
-	                  and t.${r"${criterion.condition}"}
-	                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
-	                    ${r"#{listItem}"}
-	                  </foreach>
-	                </when>
-	              </choose>
-	            </foreach>
-	          </trim>
-	        </if>
-	      </foreach>
-	    </where>
-  	</sql>
 	<sql id="example_where_sql">
 	    <where>
 	      <foreach collection="example.criteriaList" item="criteria" separator="or">
@@ -104,16 +75,19 @@
 	          <trim prefix="(" prefixOverrides="and" suffix=")">
 	            <foreach collection="criteria.criteria" item="criterion">
 	              <choose>
-	                <when test="criterion.noValue">
+	                <when test="criterion.valueType=='noValue'">
 	                  and t.${r"${criterion.condition}"}
 	                </when>
-	                <when test="criterion.singleValue">
+	                <when test="criterion.valueType=='singleValue'">
 	                  and t.${r"${criterion.condition}"} ${r"#{criterion.value}"}
 	                </when>
-	                <when test="criterion.betweenValue">
+	                <when test="criterion.valueType=='fieldValue'">
+	                  and t.${r"${criterion.condition}"} t.${r"${criterion.value}"}
+	                </when>
+	                <when test="criterion.valueType=='betweenValue'">
 	                  and t.${r"${criterion.condition}"} ${r"#{criterion.value}"} and ${r"#{criterion.secondValue}"}
 	                </when>
-	                <when test="criterion.listValue">
+	                <when test="criterion.valueType=='listValue'">
 	                  and t.${r"${criterion.condition}"}
 	                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
 	                    ${r"#{listItem}"}
@@ -126,6 +100,7 @@
 	      </foreach>
 	    </where>
   	</sql>
+  	<#if table.joinTables??>
 	<sql id="join_example_where_sql">
       <trim prefix="and ">
       <foreach collection="joinExample.criteriaList" item="criteria" separator="or">
@@ -133,16 +108,19 @@
           <trim prefix="(" prefixOverrides="and" suffix=")">
             <foreach collection="criteria.criteria" item="criterion">
               <choose>
-                <when test="criterion.noValue">
+                <when test="criterion.valueType=='noValue'">
                   and t1.${r"${criterion.condition}"}
                 </when>
-                <when test="criterion.singleValue">
+                <when test="criterion.valueType=='singleValue'">
                   and t1.${r"${criterion.condition}"} ${r"#{criterion.value}"}
                 </when>
-                <when test="criterion.betweenValue">
+                <when test="criterion.valueType=='fieldValue'">
+                  and t1.${r"${criterion.condition}"} t1.${r"${criterion.value}"}
+                </when>                
+                <when test="criterion.valueType=='betweenValue'">
                   and t1.${r"${criterion.condition}"} ${r"#{criterion.value}"} and ${r"#{criterion.secondValue}"}
                 </when>
-                <when test="criterion.listValue">
+                <when test="criterion.valueType=='listValue'">
                   and t1.${r"${criterion.condition}"}
                   <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
                     ${r"#{listItem}"}
@@ -155,120 +133,162 @@
       </foreach>
       </trim>
   	</sql>
+  	</#if>
 	<insert id="save" parameterType="${entityPackage}.${table.moduleNameCapi}Entity">
 		insert into ${table.tableName} (
 	  	<#list table.fields as key> 
-			${key.field}<#if key_has_next>,</#if>
+			${key.columnDelimit}<#if key_has_next>,</#if>
 		</#list>
 	    )values (
 	    <#list table.fields as key>
-	        ${r"#{"}${key.attribute}${r"}"}<#if key_has_next>,</#if>
+	        ${r"#{"}${key.field}${r"}"}<#if key_has_next>,</#if>
 		</#list>
 	    )
 	</insert>
 	
 	<insert id="saveSelective" parameterType="${entityPackage}.${table.moduleNameCapi}Entity">
 		insert into ${table.tableName} (
+		<trim suffixOverrides=",">
 	  	<#list table.fields as key> 
-	  	   <if test="${key.attribute} != null">
-			${key.field}<#if key_has_next>,</#if>
+	  	   <if test="${key.field} != null">
+			${key.columnDelimit}<#if key_has_next>,</#if>
 		   </if>
 		</#list>
+		</trim>
 	    )values (
+	    <trim suffixOverrides=",">
 	    <#list table.fields as key> 
-	      <if test="${key.attribute} != null">
-	       ${r"#{"}${key.attribute}${r"}"}<#if key_has_next>,</#if>
+	      <if test="${key.field} != null">
+	       ${r"#{"}${key.field}${r"}"}<#if key_has_next>,</#if>
 		   </if>
 		</#list>
+		</trim>
 	    )
 	</insert>
 	
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
 		 delete from ${table.tableName}
-         where ${primaryKey.field} = ${r"#{"}${primaryKey.attribute}${r"}"}
+         where ${primaryKey.field} = ${r"#{"}${primaryKey.field}${r"}"}
 	</delete>
 	
-	<delete id="deleteByExample" parameterType="${entityPackage}.${table.moduleNameCapi}Example">
+	<delete id="deleteByExample" parameterType="map">
 		 delete from ${table.tableName} t
-    <if test="_parameter != null">
-      <include refid="where_sql" />
+    <if test="example != null">
+      <include refid="example_where_sql" />
     </if>
 	</delete>
 	
 	<update id="updateByPrimaryKey" parameterType="${entityPackage}.${table.moduleNameCapi}Entity">
-		update 	${table.tableName} set 
-		<#list table.fields as key> 
+		update 	${table.tableName} t set 
+		<choose>
+           <when test="updateColumns != null"> 
+           	${r"${updateColumns}"}
+           </when>
+           <otherwise>
+			<#list table.fields as key> 
 			<#if key.isPrimaryKey != "1">
-			${key.field} = ${r"#{"}${key.attribute}${r"}"}<#if key_has_next>,</#if>
+				t.${key.column} = ${r"#{"}${key.field}${r"}"}<#if key_has_next>,</#if>
 			</#if>
-		</#list>
-		 where ${primaryKey.field} = ${r"#{"}${primaryKey.attribute}${r"}"}
+			</#list>
+		   </otherwise>
+        </choose>
+		 where ${primaryKey.column} = ${r"#{"}${primaryKey.field}${r"}"}
 	</update>
 	
 	<update id="updateByPrimaryKeySelective" parameterType="${entityPackage}.${table.moduleNameCapi}Entity">
-		update 	${table.tableName}
-		<set> 
-		<#list table.fields as key> 
-		<#if key.isPrimaryKey != "1">
-	  	   <if test="${key.attribute} != null">
-			${key.field} = ${r"#{"}${key.attribute}${r"}"},
-		   </if>
-		</#if>
-		</#list>
-        </set>
-        where ${primaryKey.field} = ${r"#{"}${primaryKey.attribute}${r"}"}
+		update 	${table.tableName} t
+		<choose>
+           <when test="updateColumns != null"> 
+           	set ${r"${updateColumns}"}
+           </when>
+          <otherwise>
+	        <set> 
+			<#list table.fields as key> 
+			<#if key.isPrimaryKey != "1">
+		  	   <if test="${key.field} != null">
+				t.${key.column} = ${r"#{"}${key.field}${r"}"},
+			   </if>
+			</#if>
+			</#list>
+			</set>
+		  </otherwise>
+        </choose>
+        where ${primaryKey.column} = ${r"#{"}${primaryKey.field}${r"}"}
 	</update>
 	
 	<update id="updateByExample" parameterType="map">
 		update 	${table.tableName} t set 
-		<#list table.fields as key> 
-		<#if key.isPrimaryKey != "1">
-			${key.field} = ${r"#{entity."}${key.attribute}${r"}"}<#if key_has_next>,</#if>
-		</#if>
-		</#list>
-    <if test="_parameter != null">
+		<choose>
+           <when test="entity != null and entity.updateColumns != null"> 
+           	${r"${entity.updateColumns}"}
+           </when>
+           <otherwise>
+			<#list table.fields as key> 
+			<#if key.isPrimaryKey != "1">
+				t.${key.column} = ${r"#{entity."}${key.field}${r"}"}<#if key_has_next>,</#if>
+			</#if>
+			</#list>
+		   </otherwise>
+        </choose>
+    <if test="example != null">
       <include refid="example_where_sql" />
     </if>
 	</update>
 
 	<update id="updateByExampleSelective" parameterType="map">
 		update 	${table.tableName} t
-        <set> 
-		<#list table.fields as key> 
-		<#if key.isPrimaryKey != "1">
-	  	   <if test="entity.${key.attribute} != null and entity.${key.attribute} != 'null'">
-			${key.field} = ${r"#{entity."}${key.attribute}${r"}"},
-		   </if>
-		</#if>
-		</#list>
-		</set>
-    <if test="_parameter != null">
-      <include refid="example_where_sql" />
-    </if>
+		<choose>
+           <when test="entity != null and entity.updateColumns != null"> 
+           	set ${r"${entity.updateColumns}"}
+           </when>
+          <otherwise>
+	        <set> 
+			<#list table.fields as key> 
+			<#if key.isPrimaryKey != "1">
+		  	   <if test="entity.${key.field} != null">
+				t.${key.column} = ${r"#{entity."}${key.field}${r"}"},
+			   </if>
+			</#if>
+			</#list>
+			</set>
+		  </otherwise>
+        </choose>		
+	    <if test="example != null">
+	      <include refid="example_where_sql" />
+	    </if>
 	</update>
 
-	<select id="countByExample"  parameterType="${entityPackage}.${table.moduleNameCapi}Example" resultType="java.lang.Integer">
+	<select id="countByExample"  parameterType="map" resultType="java.lang.Integer">
 	    select count(*) from ${table.tableName} t
-    <if test="_parameter != null">
-      <include refid="where_sql" />
+    <if test="example != null">
+      <include refid="example_where_sql" />
     </if>
 	</select>
 	
-	<select id="queryByPrimaryKey"  parameterType="java.lang.String" resultType="${entityPackage}.${table.moduleNameCapi}Entity">
+	<select id="queryByPrimaryKey"  parameterType="java.lang.String" resultMap="${table.moduleName}Map">
 	    select *		
  		from ${table.tableName}
- 		where ${primaryKey.field} = ${r"#{"}${primaryKey.attribute}${r"}"}
+ 		where ${primaryKey.field} = ${r"#{"}${primaryKey.field}${r"}"}
 	</select>
 	
-	<select id="queryByExample"  parameterType="${entityPackage}.${table.moduleNameCapi}Example" resultType="${entityPackage}.${table.moduleNameCapi}Entity">
+	<select id="queryByExample"  parameterType="${entityPackage}.${table.moduleNameCapi}Example" resultMap="${table.moduleName}Map">
 	    select 
 		<choose>
-            <when test="columnStr != null and columnStr != 'null'"> ${r"${columnStr}"}</when>
+            <when test="example.selectColumns != null"> ${r"${example.selectColumns}"}</when>
             <otherwise> * </otherwise>
          </choose>
  		from ${table.tableName} t
-    <if test="_parameter != null">
-      <include refid="where_sql" />
+	<if test="example != null">
+      <include refid="example_where_sql" />
+	  <if test="example.orderBy!=null">
+	    	order by
+	    	<foreach collection="example.orderBy.keys" item="k" separator=",">   
+			   ${r"t.${k} ${example.orderBy[k]}"}
+			</foreach>   
+	   </if>	    
+	   <if test="example.start !=null and example.size != null">
+			limit ${r"#{example.start},#{example.size}"}
+		</if>
     </if>
 	</select>
 <#if table.joinTables??>
@@ -276,7 +296,7 @@
 	<select id="query${keys.moduleNameCapi}ByPrimaryKey"  parameterType="map" resultMap="${keys.moduleName}Map">
 	    select t.*,
   <#list keys.fields as key>
-  			t${keys_index+1}.${key.field} ${key.field}_${keys_index} <#if key_has_next>,</#if>
+  			t${keys_index+1}.${key.column} ${key.column}_${keys_index} <#if key_has_next>,</#if>
   </#list>  
  		from ${table.tableName} t
  		left join ${keys.tableName} t1  on t.${primaryKey.field} = t1.${keys.foreignKey}
@@ -289,7 +309,7 @@
 	<select id="query${keys.moduleNameCapi}ByExample"  parameterType="map" resultMap="${keys.moduleName}Map">
 	    select t.*,
   			<#list keys.fields as key>
-  			t1.${key.field} ${key.field}_${keys_index} <#if key_has_next>,</#if>
+  			t1.${key.column} ${key.column}_${keys_index} <#if key_has_next>,</#if>
   			</#list>  
  		from ${table.tableName} t
  		left join ${keys.tableName} t1  on t.${primaryKey.field} = t1.${keys.foreignKey}
@@ -297,15 +317,25 @@
 	    	<include refid="join_example_where_sql" />
 	    </if>
 	    <if test="example != null">
-	      <include refid="example_where_sql" />
+			<include refid="example_where_sql" />
+			<if test="example.orderBy!=null">
+				order by
+				<foreach collection="example.orderBy.keys" item="k" separator=",">
+					${r"t.${k} ${example.orderBy[k]}"}
+				</foreach>
+			</if>
+			<if test="example.start !=null and example.size != null">
+				limit ${r"#{example.start},#{example.size}"}
+			</if>	
 	    </if>
+    
 	</select>
  </#list>
  	<#if (table.joinTables?size>1)>
 	<select id="queryAllJoinByPrimaryKey"  parameterType="map" resultMap="${table.moduleName}AllJoinMap">
 	    select t.*,
 	  <#list table.joinTables as keys>
-		  <#list keys.fields as key>t${keys_index+1}.${key.field} ${key.field}_${keys_index}<#if key_has_next>,</#if>
+		  <#list keys.fields as key>t${keys_index+1}.${key.column} ${key.column}_${keys_index}<#if key_has_next>,</#if>
 		  </#list> <#if keys_has_next>,</#if>
 	  </#list>
  		from ${table.tableName} t
@@ -346,7 +376,7 @@
 	<select id="queryAllJoinByExample"  parameterType="map" resultMap="${table.moduleName}AllJoinMap">
 	    select t.*,
 	  	<#list table.joinTables as keys>
-		  <#list keys.fields as key>t${keys_index+1}.${key.field} ${key.field}_${keys_index}<#if key_has_next>,</#if>
+		  <#list keys.fields as key>t${keys_index+1}.${key.column} ${key.column}_${keys_index}<#if key_has_next>,</#if>
 		  </#list> <#if keys_has_next>,</#if>
 	  	</#list>
  		from ${table.tableName} t
@@ -384,6 +414,15 @@
  		</#list>	    
  		<if test="example != null">
 	      <include refid="example_where_sql" />
+		  <if test="example.orderBy!=null">
+		    	order by
+		    	<foreach collection="example.orderBy.keys" item="k" separator=",">   
+				    ${r"t.${k} ${example.orderBy[k]}"}
+				</foreach>   
+		   </if>	    
+		   <if test="example.start !=null and example.size != null">
+				limit ${r"#{example.start},#{example.size}"}
+			</if>
 	    </if>
 	</select>
 	</#if>

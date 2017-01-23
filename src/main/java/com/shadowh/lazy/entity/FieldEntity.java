@@ -1,8 +1,14 @@
 package com.shadowh.lazy.entity;
 
+import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.commons.io.IOUtils;
+
+import com.shadowh.lazy.GenerateCode;
 import com.shadowh.lazy.util.JdbcUtil;
 import com.shadowh.lazy.util.StringUtil;
 
@@ -12,15 +18,16 @@ import com.shadowh.lazy.util.StringUtil;
  * @date 2016年9月18日 上午10:05:13
  */
 public class FieldEntity {
-	private String field;
+	private String column;//表字段
+	private String columnDelimit; //如果是mysql 关键字加分隔符
+	private String columnType;
+	private String field;//实体属性
 	private String fieldType;
-	private String attribute;
-	private String attrType;
 	private String extra;//是否自增
-	private String comment;
+	private String comment;//注释
 	private String isPrimaryKey="0";
-	private String isNullable;
-	private String defaultValue;
+	private String isNullable;//是否可为空
+	private String defaultValue;//默认值
 	
 	/**
 	 * @param paraMap
@@ -28,54 +35,112 @@ public class FieldEntity {
 	 * @author hanchanghong
 	 * @date 2016年5月2日 下午9:28:20
 	 */
-	public static  List<FieldEntity> queryFieldList(String dbname, String tableName) {
-		
-		String sql="select column_name field,data_type fieldType,column_comment comment,column_key isPrimaryKey, "
+	public static  List<FieldEntity> queryFieldList(String dbname, TableEntity tableEntity) {
+		String sql="select column_name 'column',column_name columnDelimit,data_type columnType,column_comment comment,column_key isPrimaryKey, "
 				+ " is_nullable isNullable  ,column_default defaultValue,extra"
 				+ " from information_schema.COLUMNS "
-				+ " where table_name = '"+tableName+"' and table_schema = '"+dbname+"'";
+				+ " where table_name = '"+tableEntity.getTableName()+"' and table_schema = '"+dbname+"'";
 		List<FieldEntity> fieldList = null;
 		try {
+			String mysqlKeywords=IOUtils.toString(GenerateCode.class.getResourceAsStream("/" + "mysql-keywords.txt"));
+			String javaKeywords=IOUtils.toString(GenerateCode.class.getResourceAsStream("/" + "java-keywords.txt"));
 			fieldList = JdbcUtil.query(FieldEntity.class,sql);
+			List<FieldEntity> tempFieldList= new ArrayList<FieldEntity>();
 			for (FieldEntity field : fieldList) {
-				field.setAttribute( StringUtil.underlineToCamel(field.getField()));
+				field.setAttribute( StringUtil.underlineToCamel(field.getColumn()));
 				if("PRI".equals(field.getIsPrimaryKey())){
 					field.setIsPrimaryKey("1");
 				}
-				if(field.getFieldType().indexOf("int")!=-1||"decimal".equals(field.getFieldType())){
-					field.setAttrType("Integer");
+				if("int".equals(field.getColumnType())||"tinyint".equals(field.getColumnType())){
+					field.setFieldType("Integer");
+				}else if ("bigint".equals(field.getColumnType())){
+					field.setFieldType("Long");
+				}else if ("float".equals(field.getColumnType())){
+					field.setFieldType("Float");
+				}else if ("double".equals(field.getColumnType())||"decimal".equals(field.getColumnType())){
+					field.setFieldType("Double");
 				}else{
-					field.setAttrType("String");
+					field.setFieldType("String");
+				}
+				
+				/**
+				 * 强制重写mysql关键字
+				 */
+				if(StringUtil.isNotEmpty(mysqlKeywords)&&mysqlKeywords.indexOf(","+field.getColumn()+",")!=-1){
+					field.setColumnDelimit("`"+field.getColumn()+"`");
+				}
+				/**
+				 * 强制重写java关键字
+				 */
+				if(StringUtil.isNotEmpty(javaKeywords)&&javaKeywords.indexOf(","+field.getAttribute()+",")!=-1){
+					field.setAttribute(field.getAttribute()+"As");
+				}
+				
+				/**
+				 * 重写实体属性
+				 */
+				if(tableEntity.getOverrideColumns()!=null&&!tableEntity.getOverrideColumns().isEmpty()){
+					for (Map<String,String> map:tableEntity.getOverrideColumns()) {
+						if(field.getColumn().equals(map.get("column-name"))){
+							if(StringUtil.isNotEmpty(map.get("field-name"))){
+								field.setField(map.get("field-name"));
+							}
+							if(StringUtil.isNotEmpty(map.get("field-type"))){
+								field.setFieldType(map.get("field-type"));
+							}
+						}
+					}
+				}
+				if(tableEntity.getIgnoreColumns()!=null&&!tableEntity.getIgnoreColumns().isEmpty()){
+					if(tableEntity.getIgnoreColumns().contains(field.getColumn())){
+						tempFieldList.add(field);
+					}
+				}else{
+					if(tableEntity.getOnlyColumns()!=null&&!tableEntity.getOnlyColumns().isEmpty()){
+						if(!tableEntity.getOnlyColumns().contains(field.getColumn())){
+							tempFieldList.add(field);
+						}
+					}
 				}
 			}
+			fieldList.removeAll(tempFieldList);
 		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		return fieldList;
 	}
-	public String getField() {
+
+	public String getColumn() {
+		return column;
+	}
+
+	public void setColumn(String column) {
+		this.column = column;
+	}
+
+	public String getColumnDelimit() {
+		return columnDelimit;
+	}
+
+	public void setColumnDelimit(String columnDelimit) {
+		this.columnDelimit = columnDelimit;
+	}
+
+	public String getColumnType() {
+		return columnType;
+	}
+
+	public void setColumnType(String columnType) {
+		this.columnType = columnType;
+	}
+
+	public String getAttribute() {
 		return field;
 	}
-	public void setField(String field) {
-		this.field = field;
-	}
-	public String getFieldType() {
-		return fieldType;
-	}
-	public void setFieldType(String fieldType) {
-		this.fieldType = fieldType;
-	}
-	public String getAttribute() {
-		return attribute;
-	}
 	public void setAttribute(String attribute) {
-		this.attribute = attribute;
-	}
-	public String getAttrType() {
-		return attrType;
-	}
-	public void setAttrType(String attrType) {
-		this.attrType = attrType;
+		this.field = attribute;
 	}
 	public String getComment() {
 		return comment;
@@ -110,10 +175,26 @@ public class FieldEntity {
 	public void setExtra(String extra) {
 		this.extra = extra;
 	}
-	@Override
-	public String toString() {
-		return "FieldEntity [field=" + field + ", fieldType=" + fieldType + ", attribute=" + attribute + ", attrType=" + attrType + ", extra=" + extra + ", comment=" + comment + ", isPrimaryKey=" + isPrimaryKey + ", isNullable=" + isNullable + ", defaultValue=" + defaultValue + "]";
+
+	public String getField() {
+		return field;
 	}
 
+	public void setField(String field) {
+		this.field = field;
+	}
+
+	public String getFieldType() {
+		return fieldType;
+	}
+
+	public void setFieldType(String fieldType) {
+		this.fieldType = fieldType;
+	}
+
+	@Override
+	public String toString() {
+		return "FieldEntity [column=" + column + ", columnDelimit=" + columnDelimit + ", columnType=" + columnType + ", field=" + field + ", fieldType=" + fieldType + ", extra=" + extra + ", comment=" + comment + ", isPrimaryKey=" + isPrimaryKey + ", isNullable=" + isNullable + ", defaultValue=" + defaultValue + "]";
+	}
 	
 }

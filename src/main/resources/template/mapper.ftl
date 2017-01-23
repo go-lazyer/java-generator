@@ -37,7 +37,7 @@ public interface ${table.moduleNameCapi}Mapper {
 	 * @author ${author}
 	 * @date ${updateTime}
 	 */
-	public int deleteByExample(${table.moduleNameCapi}Example example);	
+	public int deleteByExample(@Param("example") ${table.moduleNameCapi}Example example);	
 	
 	/**
 	 * 按主键修改全部字段
@@ -74,7 +74,7 @@ public interface ${table.moduleNameCapi}Mapper {
 	 * @author ${author}
 	 * @date ${updateTime}
 	 */
-	public Integer countByExample(${table.moduleNameCapi}Example example);
+	public Integer countByExample(@Param("example") ${table.moduleNameCapi}Example example);
 	
 	
 	/**
@@ -89,7 +89,7 @@ public interface ${table.moduleNameCapi}Mapper {
 	 * @author ${author}
 	 * @date ${updateTime}
 	 */
-	public List<${table.moduleNameCapi}Entity> queryByExample(${table.moduleNameCapi}Example example);
+	public List<${table.moduleNameCapi}Entity> queryByExample(@Param("example") ${table.moduleNameCapi}Example example);
 <#if table.joinTables??>
  <#list table.joinTables as keys>
  

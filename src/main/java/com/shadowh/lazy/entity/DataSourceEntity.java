@@ -1,6 +1,10 @@
 package com.shadowh.lazy.entity;
 
+import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
+import org.dom4j.Attribute;
+import org.dom4j.Element;
 
 import com.shadowh.lazy.util.StringUtil;
 
@@ -14,6 +18,53 @@ public class DataSourceEntity {
 	private String dbname;
 	private String username;
 	private String password;
+	
+	public static DataSourceEntity parseXml(Element rootElement){
+		/**
+		 * 获取数据源 先通过属性获取，再通过子元素获取
+		 */
+		DataSourceEntity dataSource = new DataSourceEntity();
+		Element dataSourceElement = rootElement.element("data-source");
+		if (dataSourceElement != null) {
+			List<Attribute> dataSourceAttributes = dataSourceElement.attributes();
+			for (Attribute attribute : dataSourceAttributes) {
+				switch (attribute.getName()) {
+				case "url":
+					dataSource.setUrl(attribute.getValue());
+					break;
+				case "username":
+					dataSource.setUsername(attribute.getValue());
+					break;
+				case "password":
+					dataSource.setPassword(attribute.getValue());
+					break;
+				default:
+					break;
+				}
+			}
+
+			List<Element> dataSourceElements = dataSourceElement.elements("property");
+			for (Element element : dataSourceElements) {
+				Attribute nameAttribute = element.attribute("name");
+				Attribute valueAttribute = element.attribute("value");
+				switch (nameAttribute.getValue()) {
+				case "url":
+					dataSource.setUrl(valueAttribute.getValue());
+					break;
+				case "username":
+					dataSource.setUsername(valueAttribute.getValue());
+					break;
+				case "password":
+					dataSource.setPassword(valueAttribute.getValue());
+					break;
+				default:
+					break;
+				}
+			}
+		}
+		return dataSource;
+	}
+	
 	public String getDbname() {
 		return dbname;
 	}

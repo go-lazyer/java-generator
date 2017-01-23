@@ -9,7 +9,6 @@ import java.util.Locale;
 import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.log4j.Logger;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -23,7 +22,6 @@ import freemarker.template.Version;
  */
 public class FreeMarkerUtil {
 
-	private static final Logger logger = Logger.getLogger(FreeMarkerUtil.class);
 
 	/** 是否已初始化 */
 	private static boolean isInit = false;
@@ -53,7 +51,7 @@ public class FreeMarkerUtil {
 				config.setEncoding(Locale.getDefault(), ENCODING);
 				isInit = true;
 			} catch (Exception e) {
-				logger.error("初始化FreeMarker配置出错", e);
+				LoggerUtil.error("初始化FreeMarker配置出错", e);
 			}
 		}
 	}
@@ -84,16 +82,16 @@ public class FreeMarkerUtil {
 			// 处理模版
 			template.process(data, out);
 			out.flush();
-			logger.info("由模板文件" + templateFileName + "生成" + outFileName + " 成功.");
+			LoggerUtil.info("由模板文件" + templateFileName + "生成" + outFileName + " 成功.");
 		} catch (Exception e) {
-			logger.error("由模板文件" + templateFileName + "生成" + outFileName + " 出错.", e);
+			LoggerUtil.error("由模板文件" + templateFileName + "生成" + outFileName + " 出错.", e);
 		} finally {
 			try {
 				if (out != null) {
 					out.close();
 				}
 			} catch (IOException e) {
-				logger.error("关闭Write对象出错", e);
+				LoggerUtil.error("关闭Write对象出错", e);
 			}
 		}
 	}

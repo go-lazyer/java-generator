@@ -1,6 +1,13 @@
 package com.shadowh.lazy.entity;
 
-public class GlobalConfigEntity {
+import java.util.Map;
+
+import org.apache.commons.collections.MapUtils;
+import org.dom4j.Element;
+
+import com.shadowh.lazy.util.JsonUtil;
+
+public class GlobalEntity {
 	private String entityFilePath;
 	private String entityFilePackage;
 	
@@ -19,6 +26,60 @@ public class GlobalConfigEntity {
 	private String author;//作者
 	private String updateTime;
 
+	public static GlobalEntity parseXml(Element rootElement){
+
+		/**
+		 * 获取全局配置
+		 */
+		GlobalEntity globalEntity = new GlobalEntity();
+
+		Element propertyElement = rootElement.element("properties");
+		Map<String, Object> propertyMap = JsonUtil.elementToMap(propertyElement);
+		if (propertyMap != null) {
+			globalEntity.setAuthor(MapUtils.getString(propertyMap, "author"));
+		}
+
+		Element entityElement = rootElement.element("entity");
+		Map<String, Object> entityMap = JsonUtil.elementToMap(entityElement);
+		if (entityMap != null) {
+			globalEntity.setEntityFilePath(MapUtils.getString(entityMap, "file-path"));
+			globalEntity.setEntityFilePackage(MapUtils.getString(entityMap, "file-package"));
+		}
+
+		// mapper
+		Element mapperElement = rootElement.element("mapper");
+		Map<String, Object> mapperMap = JsonUtil.elementToMap(mapperElement);
+		if (mapperMap != null) {
+			globalEntity.setMapperFilePath(MapUtils.getString(mapperMap, "file-path"));
+			globalEntity.setMapperFilePackage(MapUtils.getString(mapperMap, "file-package"));
+		}
+
+		// mapperxml
+		Element mapperXmlElement = rootElement.element("mapper-xml");
+		Map<String, Object> mapperXmlMap = JsonUtil.elementToMap(mapperXmlElement);
+		if (mapperXmlMap != null) {
+			globalEntity.setMapperXmlFilePath(MapUtils.getString(mapperXmlMap, "file-path"));
+			globalEntity.setMapperXmlFilePackage(MapUtils.getString(mapperXmlMap, "file-package"));
+		}
+
+		// service
+		Element serviceElement = rootElement.element("service");
+		Map<String, Object> serviceMap = JsonUtil.elementToMap(serviceElement);
+		if (serviceMap != null) {
+			globalEntity.setServiceFilePath(MapUtils.getString(serviceMap, "file-path"));
+			globalEntity.setServiceFilePackage(MapUtils.getString(serviceMap, "file-package"));
+		}
+
+		// serviceimp
+		Element serviceImplElement = rootElement.element("service-impl");
+		Map<String, Object> serviceImplMap = JsonUtil.elementToMap(serviceImplElement);
+		if (serviceImplMap != null) {
+			globalEntity.setServiceImplFilePath(MapUtils.getString(serviceImplMap, "file-path"));
+			globalEntity.setServiceImplFilePackage(MapUtils.getString(serviceImplMap, "file-package"));
+		}
+		return globalEntity;
+	}
+	
 	public String getEntityFilePath() {
 		return entityFilePath;
 	}

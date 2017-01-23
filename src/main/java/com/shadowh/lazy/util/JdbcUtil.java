@@ -15,13 +15,13 @@ import org.apache.commons.dbutils.handlers.BeanListHandler;
 import org.apache.commons.dbutils.handlers.MapHandler;
 import org.apache.commons.dbutils.handlers.MapListHandler;
 import org.apache.commons.dbutils.handlers.ScalarHandler;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 @SuppressWarnings("all")
 public class JdbcUtil {
 	private static DataSource dataSource;
-	private static Logger logger = LoggerFactory.getLogger(JdbcUtil.class);
+	private static Log logger = LogFactory.getLog(JdbcUtil.class);
 	public static ThreadLocal<Connection> threadLocal = new ThreadLocal<Connection>();
 	private static QueryRunner queryRunner;
 	private static String driverName =  "com.mysql.jdbc.Driver"; 
@@ -328,7 +328,7 @@ public class JdbcUtil {
 			logger.info(sql);
 			object = queryRunner.query(sql, new BeanHandler(entityClass));
 		} else {
-			logger.info("sql = {};params size = {}",sql,params.length);
+			logger.info("sql = {"+sql+"};params size = {"+params.length+"}");
 			object = queryRunner.query(sql, new BeanHandler(entityClass),params);
 		}
 		return (T) object;
