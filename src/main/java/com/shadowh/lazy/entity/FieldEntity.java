@@ -19,7 +19,7 @@ import com.shadowh.lazy.util.StringUtil;
  */
 public class FieldEntity {
 	private String column;//表字段
-	private String columnDelimit; //如果是mysql 关键字加分隔符
+	private String columnDelimit; //如果是mysql关键字加分隔符
 	private String columnType;
 	private String field;//实体属性
 	private String fieldType;

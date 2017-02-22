@@ -24,14 +24,14 @@ public class GenerateCode {
 	private static GlobalEntity globalEntity;
 	private static List<TableEntity> tableList;
 
-	public void gencode(){
+	public static void gencode(){
 		gencode("lazy-config.xml");
 	}
 	/**
 	 * 生成代码
 	 * @date 2016年5月9日 下午2:03:19
 	 */
-	public void gencode(String configXmlName){
+	public static void gencode(String configXmlName){
 		parseXml(configXmlName);
 		JdbcUtil.updateDataSource(dataSource.getUrl(), dataSource.getUsername(), dataSource.getPassword());
 		globalEntity.setUpdateTime(DateTime.now().toString("yyyy-MM-dd HH:mm:ss"));
@@ -46,7 +46,6 @@ public class GenerateCode {
 
 		for (TableEntity tableEntity : tableList) {
 			List<FieldEntity> fieldList = FieldEntity.queryFieldList(dataSource.getDbname(), tableEntity);
-			System.out.println(fieldList);
 			for (FieldEntity fieldEntity : fieldList) {
 				if("1".equals(fieldEntity.getIsPrimaryKey())){
 					viewMap.put("primaryKey", fieldEntity);
@@ -70,14 +69,15 @@ public class GenerateCode {
 			}
 			viewMap.put("table", tableEntity);
 			
-			FreeMarkerUtil.crateFile(viewMap, "entity.ftl", globalEntity.getEntityFilePath() + "/" + globalEntity.getEntityFilePackage().replace(".", "/") + "/" + tableEntity.getModuleNameCapi() + "Entity.java");
-			FreeMarkerUtil.crateFile(viewMap, "example.ftl", globalEntity.getEntityFilePath() + "/" + globalEntity.getEntityFilePackage().replace(".", "/") + "/" + tableEntity.getModuleNameCapi() + "Example.java");
-			FreeMarkerUtil.crateFile(viewMap, "mapper.xml", globalEntity.getMapperXmlFilePath() + "/" + globalEntity.getMapperXmlFilePackage().replace(".", "/") + "/" + tableEntity.getModuleNameCapi() + "Mapper.xml");
-			FreeMarkerUtil.crateFile(viewMap, "mapper.ftl", globalEntity.getMapperFilePath() + "/" + globalEntity.getMapperFilePackage().replace(".", "/") + "/" + tableEntity.getModuleNameCapi() + "Mapper.java");
+			FreeMarkerUtil.crateFile(viewMap, "entity.ftl", globalEntity.getEntityFilePath() + "/" + globalEntity.getEntityFilePackage().replace(".", "/") + "/" + tableEntity.getModuleNameCapi() + ".java",true);
+			FreeMarkerUtil.crateFile(viewMap, "extend.ftl", globalEntity.getEntityFilePath() + "/" + globalEntity.getEntityFilePackage().replace(".", "/") + "/" + tableEntity.getModuleNameCapi() + "Entity.java",false);
+			FreeMarkerUtil.crateFile(viewMap, "example.ftl",globalEntity.getEntityFilePath() + "/" + globalEntity.getEntityFilePackage().replace(".", "/") + "/" + tableEntity.getModuleNameCapi() + "Example.java",true);
+			FreeMarkerUtil.crateFile(viewMap, "mapper.xml", globalEntity.getMapperXmlFilePath() + "/" + globalEntity.getMapperXmlFilePackage().replace(".", "/") + "/" + tableEntity.getModuleNameCapi() + "Mapper.xml",true);
+			FreeMarkerUtil.crateFile(viewMap, "mapper.ftl", globalEntity.getMapperFilePath() + "/" + globalEntity.getMapperFilePackage().replace(".", "/") + "/" + tableEntity.getModuleNameCapi() + "Mapper.java",true);
 		}
 	}
 
-	public static void parseXml(String configXml) {
+	private static void parseXml(String configXml) {
 		try {
 			if(StringUtils.isEmpty(configXml)){
 				configXml="lazy-config.xml";
@@ -96,6 +96,6 @@ public class GenerateCode {
 	}
 
 	public static void main(String[] args) throws Throwable {
-		parseXml("");
+//		parseXml("");
 	}
 }

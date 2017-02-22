@@ -63,7 +63,7 @@ public class FreeMarkerUtil {
 	 * @param outFileName 生成文件名称(可带路径)
 	 * @param isAbsPath 是否绝对路径
 	 */
-	public static void crateFile(Map<String, Object> data, String templateFileName, String outFileName) {
+	public static void crateFile(Map<String, Object> data, String templateFileName, String outFileName,boolean override) {
 		if (!isInit) {
 			initFreeMarker();
 		}
@@ -77,6 +77,10 @@ public class FreeMarkerUtil {
 			// 创建文件目录
 			FileUtils.forceMkdir(new File(outPath));
 			File outFile = new File(outFileName);
+			if(!override&&outFile.exists()){
+				LoggerUtil.info("由模板文件" + outFileName + "存在，不重写.");
+				return;
+			}
 			out = new OutputStreamWriter(new FileOutputStream(outFile), ENCODING);
 
 			// 处理模版

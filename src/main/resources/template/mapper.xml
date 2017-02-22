@@ -134,33 +134,41 @@
       </trim>
   	</sql>
   	</#if>
-	<insert id="save" parameterType="${entityPackage}.${table.moduleNameCapi}Entity">
+	<insert id="save" useGeneratedKeys="true" keyProperty="${primaryKey.field}" parameterType="${entityPackage}.${table.moduleNameCapi}Entity">
 		insert into ${table.tableName} (
-	  	<#list table.fields as key> 
+	  	<#list table.fields as key>
+	  	  <#if key.extra != "auto_increment">
 			${key.columnDelimit}<#if key_has_next>,</#if>
+		  </#if>
 		</#list>
 	    )values (
 	    <#list table.fields as key>
+	      <#if key.extra != "auto_increment">
 	        ${r"#{"}${key.field}${r"}"}<#if key_has_next>,</#if>
+	      </#if>
 		</#list>
 	    )
 	</insert>
 	
-	<insert id="saveSelective" parameterType="${entityPackage}.${table.moduleNameCapi}Entity">
+	<insert id="saveSelective" useGeneratedKeys="true" keyProperty="${primaryKey.field}" parameterType="${entityPackage}.${table.moduleNameCapi}Entity">
 		insert into ${table.tableName} (
 		<trim suffixOverrides=",">
-	  	<#list table.fields as key> 
+	  	<#list table.fields as key>
+	  	  <#if key.extra != "auto_increment">
 	  	   <if test="${key.field} != null">
 			${key.columnDelimit}<#if key_has_next>,</#if>
 		   </if>
+		  </#if>
 		</#list>
 		</trim>
 	    )values (
 	    <trim suffixOverrides=",">
-	    <#list table.fields as key> 
+	    <#list table.fields as key>
+	    <#if key.extra != "auto_increment">
 	      <if test="${key.field} != null">
 	       ${r"#{"}${key.field}${r"}"}<#if key_has_next>,</#if>
 		   </if>
+		  </#if>
 		</#list>
 		</trim>
 	    )
