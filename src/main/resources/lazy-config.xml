@@ -15,6 +15,7 @@
 	<mapper-xml file-package="mybatis" file-path="src/main/resources" />
 	<service file-package="com.shadow.service" file-path="src/main/java" />
 	<service-impl file-package="com.shadow.service" file-path="src/main/java" />
+	<controller file-package="com.shadow.controller" file-path="src/main/java" />
 	
 	<!--表的相关配置，每个表一个单独的标签
 		module-name：模块名称，生成的实体名 ***Entity

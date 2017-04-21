@@ -5,7 +5,7 @@ import java.util.List;
  * @author ${author}
  * @date ${updateTime}
  */
-public abstract class ${table.moduleNameCapi}{
+public class ${table.moduleNameCapi}Entity{
     <#list table.fields as key> 
 	private ${key.fieldType} ${key.field}; //${key.comment}
     </#list>

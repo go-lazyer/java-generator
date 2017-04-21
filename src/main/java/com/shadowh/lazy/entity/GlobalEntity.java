@@ -8,6 +8,11 @@ import org.dom4j.Element;
 import com.shadowh.lazy.util.JsonUtil;
 
 public class GlobalEntity {
+	
+	
+	private String controllerFilePath;
+	private String controllerFilePackage;
+
 	private String entityFilePath;
 	private String entityFilePackage;
 	
@@ -76,6 +81,14 @@ public class GlobalEntity {
 		if (serviceImplMap != null) {
 			globalEntity.setServiceImplFilePath(MapUtils.getString(serviceImplMap, "file-path"));
 			globalEntity.setServiceImplFilePackage(MapUtils.getString(serviceImplMap, "file-package"));
+		}
+		
+		// serviceimp
+		Element controllerElement = rootElement.element("controller");
+		Map<String, Object> controllerMap = JsonUtil.elementToMap(controllerElement);
+		if (controllerMap != null) {
+			globalEntity.setControllerFilePath(MapUtils.getString(controllerMap, "file-path"));
+			globalEntity.setControllerFilePackage(MapUtils.getString(controllerMap, "file-package"));
 		}
 		return globalEntity;
 	}
@@ -153,11 +166,31 @@ public class GlobalEntity {
 	public void setMapperXmlFilePackage(String mapperXmlFilePackage) {
 		this.mapperXmlFilePackage = mapperXmlFilePackage;
 	}
+	
+	public String getControllerFilePath() {
+		return controllerFilePath;
+	}
+
+	public void setControllerFilePath(String controllerFilePath) {
+		this.controllerFilePath = controllerFilePath;
+	}
+
+	public String getControllerFilePackage() {
+		return controllerFilePackage;
+	}
+
+	public void setControllerFilePackage(String controllerFilePackage) {
+		this.controllerFilePackage = controllerFilePackage;
+	}
+
 	@Override
 	public String toString() {
-		return "GlobalConfigEntity [entityFilePath=" + entityFilePath + ", entityFilePackage=" + entityFilePackage + ", serviceFilePath=" + serviceFilePath + ", serviceFilePackage=" + serviceFilePackage + ", serviceImplFilePath=" + serviceImplFilePath + ", serviceImplFilePackage=" + serviceImplFilePackage + ", mapperFilePath=" + mapperFilePath + ", mapperFilePackage=" + mapperFilePackage + ", mapperXmlFilePath=" + mapperXmlFilePath + ", mapperXmlFilePackage=" + mapperXmlFilePackage + ", author=" + author + ", updateTime=" + updateTime + "]";
+		return "GlobalEntity [controllerFilePath=" + controllerFilePath + ", controllerFilePackage="
+				+ controllerFilePackage + ", entityFilePath=" + entityFilePath + ", entityFilePackage="
+				+ entityFilePackage + ", serviceFilePath=" + serviceFilePath + ", serviceFilePackage="
+				+ serviceFilePackage + ", serviceImplFilePath=" + serviceImplFilePath + ", serviceImplFilePackage="
+				+ serviceImplFilePackage + ", mapperFilePath=" + mapperFilePath + ", mapperFilePackage="
+				+ mapperFilePackage + ", mapperXmlFilePath=" + mapperXmlFilePath + ", mapperXmlFilePackage="
+				+ mapperXmlFilePackage + ", author=" + author + ", updateTime=" + updateTime + "]";
 	}
-	
-	
-	
 }

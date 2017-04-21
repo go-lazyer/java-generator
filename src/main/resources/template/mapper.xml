@@ -276,7 +276,7 @@
 	<select id="queryByPrimaryKey"  parameterType="java.lang.String" resultMap="${table.moduleName}Map">
 	    select *		
  		from ${table.tableName}
- 		where ${primaryKey.field} = ${r"#{"}${primaryKey.field}${r"}"}
+ 		where ${primaryKey.column} = ${r"#{"}${primaryKey.field}${r"}"}
 	</select>
 	
 	<select id="queryByExample"  parameterType="${entityPackage}.${table.moduleNameCapi}Example" resultMap="${table.moduleName}Map">

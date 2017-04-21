@@ -42,7 +42,9 @@ public class GenerateCode {
 		viewMap.put("author", globalEntity.getAuthor());
 		viewMap.put("entityPackage", globalEntity.getEntityFilePackage());
 		viewMap.put("mapperPackage", globalEntity.getMapperFilePackage());
-		viewMap.put("mapperPackage", globalEntity.getMapperFilePackage());
+		viewMap.put("servicePackage", globalEntity.getServiceFilePackage());
+		viewMap.put("serviceImplPackage", globalEntity.getServiceImplFilePackage());
+		viewMap.put("controllerPackage", globalEntity.getControllerFilePackage());
 
 		for (TableEntity tableEntity : tableList) {
 			List<FieldEntity> fieldList = FieldEntity.queryFieldList(dataSource.getDbname(), tableEntity);
@@ -69,11 +71,15 @@ public class GenerateCode {
 			}
 			viewMap.put("table", tableEntity);
 			
-			FreeMarkerUtil.crateFile(viewMap, "entity.ftl", globalEntity.getEntityFilePath() + "/" + globalEntity.getEntityFilePackage().replace(".", "/") + "/" + tableEntity.getModuleNameCapi() + ".java",true);
-			FreeMarkerUtil.crateFile(viewMap, "extend.ftl", globalEntity.getEntityFilePath() + "/" + globalEntity.getEntityFilePackage().replace(".", "/") + "/" + tableEntity.getModuleNameCapi() + "Entity.java",false);
-			FreeMarkerUtil.crateFile(viewMap, "example.ftl",globalEntity.getEntityFilePath() + "/" + globalEntity.getEntityFilePackage().replace(".", "/") + "/" + tableEntity.getModuleNameCapi() + "Example.java",true);
+			FreeMarkerUtil.crateFile(viewMap, "entity.java", globalEntity.getEntityFilePath() + "/" + globalEntity.getEntityFilePackage().replace(".", "/") + "/" + tableEntity.getModuleNameCapi() + "Entity.java",true);
+			FreeMarkerUtil.crateFile(viewMap, "entity-example.java",globalEntity.getEntityFilePath() + "/" + globalEntity.getEntityFilePackage().replace(".", "/") + "/" + tableEntity.getModuleNameCapi() + "Example.java",true);
 			FreeMarkerUtil.crateFile(viewMap, "mapper.xml", globalEntity.getMapperXmlFilePath() + "/" + globalEntity.getMapperXmlFilePackage().replace(".", "/") + "/" + tableEntity.getModuleNameCapi() + "Mapper.xml",true);
-			FreeMarkerUtil.crateFile(viewMap, "mapper.ftl", globalEntity.getMapperFilePath() + "/" + globalEntity.getMapperFilePackage().replace(".", "/") + "/" + tableEntity.getModuleNameCapi() + "Mapper.java",true);
+			FreeMarkerUtil.crateFile(viewMap, "mapper.java", globalEntity.getMapperFilePath() + "/" + globalEntity.getMapperFilePackage().replace(".", "/") + "/" + tableEntity.getModuleNameCapi() + "Mapper.java",true);
+			FreeMarkerUtil.crateFile(viewMap, "mapper-extend.xml", globalEntity.getMapperXmlFilePath() + "/" + globalEntity.getMapperXmlFilePackage().replace(".", "/") + "/" + tableEntity.getModuleNameCapi() + "ExtendMapper.xml",false);
+			FreeMarkerUtil.crateFile(viewMap, "mapper-extend.java", globalEntity.getMapperFilePath() + "/" + globalEntity.getMapperFilePackage().replace(".", "/") + "/" + tableEntity.getModuleNameCapi() + "ExtendMapper.java",false);
+			FreeMarkerUtil.crateFile(viewMap, "service.java", globalEntity.getServiceFilePath() + "/" + globalEntity.getServiceFilePackage().replace(".", "/") + "/" + tableEntity.getModuleNameCapi() + "Service.java",false);
+			FreeMarkerUtil.crateFile(viewMap, "service-impl.java", globalEntity.getServiceImplFilePath() + "/" + globalEntity.getServiceImplFilePackage().replace(".", "/") + "/" + tableEntity.getModuleNameCapi() + "ServiceImpl.java",false);
+			FreeMarkerUtil.crateFile(viewMap, "controller.java", globalEntity.getControllerFilePath() + "/" + globalEntity.getControllerFilePackage().replace(".", "/") + "/" + tableEntity.getModuleNameCapi() + "Controller.java",false);
 		}
 	}
 
@@ -96,6 +102,6 @@ public class GenerateCode {
 	}
 
 	public static void main(String[] args) throws Throwable {
-//		parseXml("");
+		parseXml("");
 	}
 }
