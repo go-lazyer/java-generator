@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?eclipse version="3.4"?>
+
+<plugin> 
+  <extension point="org.eclipse.ui.popupMenus"> 
+    <objectContribution objectClass="org.eclipse.core.resources.IFile" id="com.shadowh.lazy.contribution1" nameFilter="*.xml">
+      <menu label="Lazy" path="additions" id="com.shadowh.lazy.menu1"> 
+        <separator name="group1"></separator> 
+      </menu>  
+      <action label="Generator" class="com.shadowh.lazy.popup.actions.GeneratorAction" menubarPath="com.shadowh.lazy.menu1/group1" enablesFor="1" id="com.shadowh.lazy.newAction"></action> 
+    </objectContribution> 
+  </extension> 
+</plugin>
