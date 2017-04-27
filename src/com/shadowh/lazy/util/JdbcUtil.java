@@ -59,36 +59,8 @@ public class JdbcUtil {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}  finally {  
-			closeConn();
         } 
         return list;  
-    }  
-  
-    /** 
-     * 释放资源 
-     */  
-    public static void closeConn() {  
-        if (resultSet != null) {  
-            try {  
-                resultSet.close();  
-            } catch (SQLException e) {  
-                e.printStackTrace();  
-            }  
-        }  
-        if (pstmt != null) {  
-            try {  
-                pstmt.close();  
-            } catch (SQLException e) {  
-                e.printStackTrace();  
-            }  
-        }  
-        if (connection != null) {  
-            try {  
-                connection.close();  
-            } catch (SQLException e) {  
-                e.printStackTrace();  
-            }  
-        }  
     }  
   
     public static void main(String[] args) {  

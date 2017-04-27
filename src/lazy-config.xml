@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+    <lazy-conf>
+    	<properties>
+    		<property name="author" value="lazy" /><!--代码生成的作者 -->
+    	</properties>
+    	<!--数据源配置-->
+    	<data-source >
+    		<property name="driver" value="com.mysql.jdbc.Driver"></property>
+    		<property name="url" value="jdbc:mysql://localhost/test?useUnicode=true&amp;characterEncoding=utf8&amp;allowMultiQueries=true&amp;zeroDateTimeBehavior=convertToNull" />
+    		<property name="username" value="root" />
+    		<property name="password" value="123" />
+    	</data-source>
+    	
+    	<!--各种文件的生成目录。如果不配置则该文件不会生成。
+    		其中entity，mapper，mapper-xml每次执行都是覆盖，所以不要修改这些文件，如果要现有sql满足不了需求，lazy提供了ExtendMapper拓展的mapper文件供编辑，
+    		不要忘了添加到mybatis-config.xml中
+    		service，service-impl，controller只会生成一次，如果手动创建了就不会自动生成。
+    	-->
+    	<entity file-package="com.shadowh.test.entity" file-path="src/main/java" />
+    	<mapper file-package="com.shadowh.test.mapper" file-path="src/main/java" />
+    	<mapper-xml file-package="mapper" file-path="src/main/resources" />
+    	<service file-package="com.shadowh.test.service" file-path="src/main/java" />
+    	<service-impl file-package="com.shadowh.test.service" file-path="src/main/java" />
+    	<controller file-package="com.shadowh.test.controller" file-path="src/main/java" />
+    	
+     	<table table-name="l_student"><!--学生表-->
+    		<property name="module-name" value="student"/>
+    	</table>
+     	<table table-name="l_projector"><!--投影仪表-->
+    		<property name="module-name" value="projector"/>
+    	</table>
+    	<!--lazy-generator  -->
+     	<table table-name="l_classroom"><!-- 教室表 -->
+    		<property name="module-name" value="classroom"/>
+    		<!-- 表关联 -->
+    		<join-table>
+    			<!--教室和学生是一对多关系 foreign-key 为学生表中的教室id-->
+    			<property table-name="l_student" foreign-key="classroom_id" type="one-to-many"/>
+    			<!--教室和投影仪是一对一关系 foreign-key 为投影仪表中的教室id-->
+    			<property table-name="l_projector" foreign-key="classroom_id" type="one-to-one"/>
+    		</join-table>
+    	</table>
+    </lazy-conf>
