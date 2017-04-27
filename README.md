@@ -1,6 +1,12 @@
 ###lazy-generator 代码自动生成的插件
 ####一.插件介绍
 ####二.插件安装
+    1.下载插件 http://baidu.com,放到 eclipse 的plugins文件夹中，重启eclipse
+    2.下载配置文件 放到项目的配置文件目录中。
+    3.在lazy-config.xml 中修改相关信息。
+    4.右键配置文件，Lazy --> Generator
+    5.generator success!
+
 ####三.配置文件介绍
 	<?xml version="1.0" encoding="UTF-8" ?>
 	    <lazy-conf>
@@ -45,45 +51,45 @@
 	    		</join-table>
 	    	</table>
 	    </lazy-conf>
+	    
 ####四.生成文件介绍
-  |--src/main/java
-	 |----com.shadowh.test.controller
-         |---ClassroomController.java
-         |---ProjectorController.java
-         |---StudentController.java
-	 |----com.shadowh.test.entity
-         |---ClassroomEntity.java
-         |---ClassroomExample.java
-         |---ClassroomParam.java
-         |---ClassroomView.java
-         |---ProjectorEntity.java
-         |---ProjectorExample.java
-         |---ProjectorParam.java
-         |---ProjectorView.java
-         |---StudentEntity.java
-         |---StudentExample.java
-         |---StudentParam.java
-         |---StudentView.java		 
-	 |----com.shadowh.test.mapper
-         |---ClassroomExtendMapper.java
-         |---ClassroomMapper.java
-         |---ProjectorExtendMapper.java
-         |---ProjectorMapper.java
-         |---StudentExtendMapper.java
-         |---StudentMapper.java		 
-	 |----com.shadowh.test.service 
-         |---ClassroomService.java
-         |---ClassroomServiceImpl.java
-         |---ProjectorService.java
-         |---ProjectorServiceImpl.java
-         |---StudentService.java
-         |---StudentServiceImpl.java	
-  |--src/main/resources	
-	 |----com.shadowh.test.service 
-         |---mapper
-			 |---ClassroomExtendMapper.xml
-			 |---ClassroomMapper.xml
-			 |---ProjectorExtendMapper.xml
-			 |---ProjectorMapper.xml
-			 |---StudentExtendMapper.xml
-			 |---StudentMapper.xml		 
+    |--src/main/java
+        |----com.shadowh.test.controller
+            |---ClassroomController.java
+            |---ProjectorController.java
+            |---StudentController.java
+        |----com.shadowh.test.entity
+            |---ClassroomEntity.java
+            |---ClassroomExample.java
+            |---ClassroomParam.java
+            |---ClassroomView.java
+            |---ProjectorEntity.java
+            |---ProjectorExample.java
+            |---ProjectorParam.java
+            |---ProjectorView.java
+            |---StudentEntity.java
+            |---StudentExample.java
+            |---StudentParam.java
+            |---StudentView.java
+        |----com.shadowh.test.mapper
+            |---ClassroomExtendMapper.java
+            |---ClassroomMapper.java
+            |---ProjectorExtendMapper.java
+            |---ProjectorMapper.java
+            |---StudentExtendMapper.java
+            |---StudentMapper.java
+        |----com.shadowh.test.service
+            |---ClassroomService.java
+            |---ClassroomServiceImpl.java
+            |---ProjectorService.java
+            |---ProjectorServiceImpl.java
+            |---StudentService.java
+            |---StudentServiceImpl.java	
+    |--src/main/resources
+        |---mapper
+            |---ClassroomExtendMapper.xml
+            |---ClassroomMapper.xml
+            |---ProjectorExtendMapper.xml
+            |---ProjectorMapper.xml
+            |---StudentExtendMapper.xml
+            |---StudentMapper.xml		 
