@@ -1,5 +1,6 @@
 ###lazy-generator 代码自动生成的插件
 ####一.插件介绍
+	改插件是基于 mybatis+mysql+eclipse的代码自动生成工具，旨在帮助程序源脱离枯燥的DAO层编辑
 ####二.插件安装
     1.下载插件 http://baidu.com,放到 eclipse 的plugins文件夹中，重启eclipse
     2.下载配置文件 放到项目的配置文件目录中。
@@ -55,14 +56,14 @@
 ####四.生成文件介绍
     |--src/main/java
         |----com.shadowh.test.controller
-            |---ClassroomController.java
+            |---ClassroomController.java			//首次生成，可编辑
             |---ProjectorController.java
             |---StudentController.java
         |----com.shadowh.test.entity
-            |---ClassroomEntity.java
-            |---ClassroomExample.java
-            |---ClassroomParam.java
-            |---ClassroomView.java
+            |---ClassroomEntity.java				//实体类
+            |---ClassroomExample.java				//查询类，用于查询
+            |---ClassroomParam.java					//传参列，用于接口接受参数
+            |---ClassroomView.java					//视频类，用于生成接口数据
             |---ProjectorEntity.java
             |---ProjectorExample.java
             |---ProjectorParam.java
@@ -72,23 +73,23 @@
             |---StudentParam.java
             |---StudentView.java
         |----com.shadowh.test.mapper
-            |---ClassroomExtendMapper.java
-            |---ClassroomMapper.java
+            |---ClassroomExtendMapper.java			//扩展mapper 用于扩展SQL 首次生成，可编辑
+            |---ClassroomMapper.java				//基础的SQL,每次都覆盖，禁止编辑
             |---ProjectorExtendMapper.java
             |---ProjectorMapper.java
             |---StudentExtendMapper.java
             |---StudentMapper.java
         |----com.shadowh.test.service
-            |---ClassroomService.java
-            |---ClassroomServiceImpl.java
+            |---ClassroomService.java				//扩展mapper 用于扩展SQL 首次生成，可编辑
+            |---ClassroomServiceImpl.java			//扩展mapper 用于扩展SQL 首次生成，可编辑
             |---ProjectorService.java
             |---ProjectorServiceImpl.java
             |---StudentService.java
             |---StudentServiceImpl.java	
     |--src/main/resources
         |---mapper
-            |---ClassroomExtendMapper.xml
-            |---ClassroomMapper.xml
+            |---ClassroomExtendMapper.xml			//扩展mapper 用于扩展SQL 首次生成，可编辑
+            |---ClassroomMapper.xml					//基础的SQL,每次都覆盖，禁止编辑
             |---ProjectorExtendMapper.xml
             |---ProjectorMapper.xml
             |---StudentExtendMapper.xml
