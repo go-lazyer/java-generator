@@ -1,4 +1,4 @@
-###lazy-generator 代码自动生成的插件
+###lazy-generator JAVA代码自动生成的插件
 ####一.插件介绍
 	改插件是基于 mybatis+mysql+eclipse的代码自动生成工具，旨在帮助程序源脱离枯燥的DAO层编辑
 	
