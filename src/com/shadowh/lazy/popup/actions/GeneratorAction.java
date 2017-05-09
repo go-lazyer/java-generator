@@ -70,9 +70,17 @@ public class GeneratorAction implements IObjectActionDelegate {
 			globalEntity=GlobalEntity.parseXml(rootElement);
 			tableList=TableEntity.parseXml(rootElement);
 			if(StringUtils.isEmpty(dataSource.getDbname())||StringUtils.isEmpty(dataSource.getPassword())||StringUtils.isEmpty(dataSource.getUrl())||StringUtils.isEmpty(dataSource.getUsername())){
-				MessageDialog.openInformation(this.shell,"Lazy","Database source error !");
-				return;
+				throw new RuntimeException("Database source error!");
 			}
+			
+			if(globalEntity==null||StringUtils.isEmpty(globalEntity.getEntityFilePackage())
+								 ||StringUtils.isEmpty(globalEntity.getMapperXmlFilePackage())){
+				throw new RuntimeException("package is not null !");
+			}
+			if(tableList==null||tableList.isEmpty()){
+				throw new RuntimeException("No table select !");
+			}
+			
 			JdbcUtil.init(dataSource.getUrl(), dataSource.getUsername(), dataSource.getPassword());
 			globalEntity.setUpdateTime(DateTime.now().toString("yyyy-MM-dd HH:mm:ss"));
 
@@ -85,6 +93,8 @@ public class GeneratorAction implements IObjectActionDelegate {
 			viewMap.put("serviceImplPackage", globalEntity.getServiceImplFilePackage());
 			viewMap.put("controllerPackage", globalEntity.getControllerFilePackage());
 
+			
+			
 			for (TableEntity tableEntity : tableList) {
 				List<FieldEntity> fieldList = FieldEntity.queryFieldList(dataSource.getDbname(), tableEntity);
 				for (FieldEntity fieldEntity : fieldList) {
@@ -134,7 +144,7 @@ public class GeneratorAction implements IObjectActionDelegate {
 			iFile.getProject().refreshLocal(IResource.DEPTH_INFINITE, null);
 			MessageDialog.openInformation(this.shell,"Lazy","Generator success !");
 		} catch (Exception e) {
-			e.printStackTrace();
+			MessageDialog.openInformation(this.shell,"Lazy",e.getMessage());
 		}   
 	}
 

@@ -32,15 +32,15 @@ public class FieldEntity {
 	 * @param paraMap
 	 * @return
 	 * @author hanchanghong
+	 * @throws Exception 
 	 * @date 2016年5月2日 下午9:28:20
 	 */
-	public static  List<FieldEntity> queryFieldList(String dbname, TableEntity tableEntity) {
+	public static  List<FieldEntity> queryFieldList(String dbname, TableEntity tableEntity) throws Exception {
 		String sql="select column_name 'column',column_name columnDelimit,data_type columnType,column_comment comment,column_key isPrimaryKey, "
 				+ " is_nullable isNullable  ,column_default defaultValue,extra"
 				+ " from information_schema.COLUMNS "
 				+ " where table_name = '"+tableEntity.getTableName()+"' and table_schema = '"+dbname+"'";
 		List<FieldEntity> fieldList = null;
-		try {
 			String mysqlKeywords=IOUtils.toString(FieldEntity.class.getResourceAsStream("/" + "mysql-keywords.txt"));
 			String javaKeywords=IOUtils.toString(FieldEntity.class.getResourceAsStream("/" + "java-keywords.txt"));
 			fieldList = JdbcUtil.query(sql);
@@ -103,11 +103,6 @@ public class FieldEntity {
 				}
 			}
 			fieldList.removeAll(tempFieldList);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 		return fieldList;
 	}
 
