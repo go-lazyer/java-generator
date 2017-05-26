@@ -8,22 +8,15 @@ import java.util.List;
 public class ${table.moduleNameCapi}View{
     <#list table.fields as key> 
 	private ${key.fieldType} ${key.field}; //${key.comment}
-    </#list>
-    <#if table.joinTables??>
-    <#list table.joinTables as key>
-    <#if key.type=="one-to-one">
-    private ${key.moduleNameCapi}Entity ${key.moduleName}Entity;
-    <#elseif key.type=="one-to-many">
-    private List<${key.moduleNameCapi}Entity> ${key.moduleName}List;
-    </#if>
-    </#list>
-    </#if>
-    <#if table.extendFields??>
-    <#list table.extendFields?keys as key> 
-	private ${table.extendFields[key]} ${key};
-    </#list>
-    </#if>
+    </#list>    
     
+    public static ${table.moduleNameCapi}View convert(${table.moduleNameCapi}Entity ${table.moduleName}Entity){
+		${table.moduleNameCapi}View ${table.moduleName}View= new ${table.moduleNameCapi}View();
+	<#list table.fields as key> 
+		${table.moduleName}View.set${key.field?cap_first}(${table.moduleName}Entity.get${key.field?cap_first}());
+    </#list>
+		return ${table.moduleName}View;
+	}
     
     <#list table.fields as key> 
 	public ${key.fieldType} get${key.field?cap_first}() {
@@ -34,16 +27,6 @@ public class ${table.moduleNameCapi}View{
 	}
 	</#list>
 	
-	<#if table.extendFields??>
-    <#list table.extendFields?keys as key> 
-	public ${table.extendFields[key]} get${key?cap_first}() {
-		return ${key};
-	}
-	public void set${key?cap_first}(${table.extendFields[key]} ${key}) {
-		this.${key} = ${key};
-	}
-    </#list>
-    </#if>
 
 }
 
