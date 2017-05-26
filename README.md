@@ -3,8 +3,8 @@
 	改插件是基于 mybatis+mysql+eclipse的代码自动生成工具，旨在帮助程序源脱离枯燥的DAO层编辑
 	
 ####二.插件安装
-    1.下载插件 https://coding.net/u/hanchanghong/p/lazy/git/tree/master/plugins，放到 eclipse 的plugins文件夹中，重启eclipse
-    2.下载配置文件https://coding.net/u/hanchanghong/p/lazy/git/blob/master/src/lazy-config.xml， 放到项目的配置文件目录中。
+    1.下载插件 https://coding.net/u/hanchanghong/p/lazy-generator/git/tree/master/plugins，放到 eclipse 的plugins文件夹中，重启eclipse
+    2.下载配置文件https://coding.net/u/hanchanghong/p/lazy-generator/git/blob/master/src/lazy-config.xml， 放到项目的配置文件目录中。
     3.在lazy-config.xml 中修改相关信息。
     4.右键配置文件，Lazy --> Generator
     5.generator success!
