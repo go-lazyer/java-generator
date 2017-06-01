@@ -22,8 +22,8 @@ public class TableEntity {
 	private String moduleNameCapi;
 	private List<FieldEntity> fields;
 	private List<JoinTableEntity> joinTables;
-	private Map<String,String> extendFields;
-	private List<String> ignoreColumns;
+	private Map<String,String> extendFields;//扩展的字段  
+	private List<String> ignoreColumns;//忽略的字段
 	private List<String> onlyColumns;
 	private List<Map<String,String>> overrideColumns;
 
